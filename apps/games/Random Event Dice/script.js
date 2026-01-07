@@ -180,7 +180,6 @@ class AnalyticsTracker {
             playerId: this.currentPlayerIndex,
             playerName: this.players[this.currentPlayerIndex],
             rolls: this.currentTurnRolls,
-            rolls: this.currentTurnRolls,
             time: elapsed
         });
 
@@ -260,7 +259,6 @@ class AnalyticsTracker {
         return data;
     }
 
-    // Simulate remaining game to end (skip to end)
     // Simulate remaining game to end (skip to end)
     simulateToEnd(samplePool, eventDefinitions, checkConditionFn, intervalSeconds) {
         const results = { events: 0, totalRolls: 0 };
@@ -786,13 +784,9 @@ class DiceGame {
         const results = this.analytics.simulateToEnd(
             this.samplePool,
             this.settings.eventDefinitions,
-            checkFn
-        const results = this.analytics.simulateToEnd(
-                this.samplePool,
-                this.settings.eventDefinitions,
-                checkFn,
-                this.settings.interval / 1000 // Pass interval in seconds
-            );
+            checkFn,
+            this.settings.interval / 1000 // Pass interval in seconds
+        );
 
         console.debug(`[Analytics] Skip to end: ${results.totalRolls} rolls, ${results.events} events`);
 
@@ -1086,6 +1080,16 @@ class DiceGame {
         if (warningEl) {
             warningEl.remove();
         }
+    }
+
+    checkWarning() {
+        // Check if there's an active validation warning that should prevent game start
+        const warningEl = document.getElementById('validation-warning');
+        if (warningEl && warningEl.offsetParent !== null) {
+            console.warn('[Game] Cannot start: validation warning active');
+            return true;
+        }
+        return false;
     }
 
     // --- JSON Import/Export ---
