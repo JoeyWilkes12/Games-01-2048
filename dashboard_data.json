@@ -1,0 +1,1203 @@
+{
+  "records": [
+    {
+      "Index": 1.0,
+      "Algorithm": "Mc",
+      "Full Name": 2,
+      "Grid Area": 16.0,
+      "Score": 5764.0,
+      "Notes": null
+    },
+    {
+      "Index": 2.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 10472.0,
+      "Notes": null
+    },
+    {
+      "Index": 3.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 12776.0,
+      "Notes": null
+    },
+    {
+      "Index": 4.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 6932.0,
+      "Notes": null
+    },
+    {
+      "Index": 5.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 15976.0,
+      "Notes": null
+    },
+    {
+      "Index": 6.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 25500.0,
+      "Notes": "It achieved 2048"
+    },
+    {
+      "Index": 7.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 15984.0,
+      "Notes": null
+    },
+    {
+      "Index": 8.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 4988.0,
+      "Notes": null
+    },
+    {
+      "Index": 9.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 11836.0,
+      "Notes": null
+    },
+    {
+      "Index": 10.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 7216.0,
+      "Notes": null
+    },
+    {
+      "Index": 11.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 7104.0,
+      "Notes": null
+    },
+    {
+      "Index": 12.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 7100.0,
+      "Notes": null
+    },
+    {
+      "Index": 13.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 7452.0,
+      "Notes": null
+    },
+    {
+      "Index": 14.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 10500.0,
+      "Notes": null
+    },
+    {
+      "Index": 15.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 7492.0,
+      "Notes": null
+    },
+    {
+      "Index": 16.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 10884.0,
+      "Notes": null
+    },
+    {
+      "Index": 17.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 25.0,
+      "Score": 81588.0,
+      "Notes": "It achieved 2048, and 4096"
+    },
+    {
+      "Index": 18.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 25.0,
+      "Score": 61036.0,
+      "Notes": "It achieved 4096"
+    },
+    {
+      "Index": 19.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 25.0,
+      "Score": 130852.0,
+      "Notes": "It achieved 8192, 2048 also"
+    },
+    {
+      "Index": 20.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 79004.0,
+      "Notes": null
+    },
+    {
+      "Index": 21.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 25.0,
+      "Score": 57548.0,
+      "Notes": null
+    },
+    {
+      "Index": 22.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 25.0,
+      "Score": 61836.0,
+      "Notes": null
+    },
+    {
+      "Index": 23.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 25.0,
+      "Score": 174680.0,
+      "Notes": null
+    },
+    {
+      "Index": 24.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 115972.0,
+      "Notes": null
+    },
+    {
+      "Index": 25.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 14376.0,
+      "Notes": null
+    },
+    {
+      "Index": 26.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 16092.0,
+      "Notes": null
+    },
+    {
+      "Index": 27.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 7208.0,
+      "Notes": null
+    },
+    {
+      "Index": 28.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 6500.0,
+      "Notes": null
+    },
+    {
+      "Index": 29.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 5320.0,
+      "Notes": null
+    },
+    {
+      "Index": 30.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 11400.0,
+      "Notes": null
+    },
+    {
+      "Index": 31.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 10272.0,
+      "Notes": null
+    },
+    {
+      "Index": 32.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 12220.0,
+      "Notes": null
+    },
+    {
+      "Index": 33.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 12120.0,
+      "Notes": null
+    },
+    {
+      "Index": 34.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 7148.0,
+      "Notes": null
+    },
+    {
+      "Index": 35.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 15812.0,
+      "Notes": null
+    },
+    {
+      "Index": 36.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 15620.0,
+      "Notes": null
+    },
+    {
+      "Index": 37.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 6752.0,
+      "Notes": null
+    },
+    {
+      "Index": 38.0,
+      "Algorithm": "E",
+      "Full Name": "Expectimax Tree",
+      "Grid Area": 16.0,
+      "Score": 16160.0,
+      "Notes": null
+    },
+    {
+      "Index": 39.0,
+      "Algorithm": "Igs",
+      "Full Name": "IDDFS Graph Search",
+      "Grid Area": 16.0,
+      "Score": 12544.0,
+      "Notes": null
+    },
+    {
+      "Index": 40.0,
+      "Algorithm": "Rl",
+      "Full Name": "Reinforcement Learning",
+      "Grid Area": 16.0,
+      "Score": 7420.0,
+      "Notes": null
+    },
+    {
+      "Index": 41.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36924.0,
+      "Notes": null
+    },
+    {
+      "Index": 42.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 72780.0,
+      "Notes": null
+    },
+    {
+      "Index": 43.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 61672.0,
+      "Notes": null
+    },
+    {
+      "Index": 44.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 79864.0,
+      "Notes": null
+    },
+    {
+      "Index": 45.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 14052.0,
+      "Notes": null
+    },
+    {
+      "Index": 46.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 16128.0,
+      "Notes": null
+    },
+    {
+      "Index": 47.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 27092.0,
+      "Notes": null
+    },
+    {
+      "Index": 48.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7452.0,
+      "Notes": null
+    },
+    {
+      "Index": 49.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 168764.0,
+      "Notes": null
+    },
+    {
+      "Index": 50.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80104.0,
+      "Notes": null
+    },
+    {
+      "Index": 51.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 174420.0,
+      "Notes": null
+    },
+    {
+      "Index": 52.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 60792.0,
+      "Notes": null
+    },
+    {
+      "Index": 53.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 15144.0,
+      "Notes": null
+    },
+    {
+      "Index": 54.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 6444.0,
+      "Notes": null
+    },
+    {
+      "Index": 55.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7200.0,
+      "Notes": null
+    },
+    {
+      "Index": 56.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12088.0,
+      "Notes": null
+    },
+    {
+      "Index": 57.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 15648.0,
+      "Notes": null
+    },
+    {
+      "Index": 58.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7472.0,
+      "Notes": null
+    },
+    {
+      "Index": 59.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7240.0,
+      "Notes": null
+    },
+    {
+      "Index": 60.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 6976.0,
+      "Notes": null
+    },
+    {
+      "Index": 61.0,
+      "Algorithm": "Mc",
+      "Full Name": "#N/A",
+      "Grid Area": 16.0,
+      "Score": 27128.0,
+      "Notes": null
+    },
+    {
+      "Index": 62.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 14384.0,
+      "Notes": null
+    },
+    {
+      "Index": 63.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 6940.0,
+      "Notes": null
+    },
+    {
+      "Index": 64.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 11536.0,
+      "Notes": null
+    },
+    {
+      "Index": 65.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 79768.0,
+      "Notes": null
+    },
+    {
+      "Index": 66.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 81412.0,
+      "Notes": null
+    },
+    {
+      "Index": 67.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 60984.0,
+      "Notes": null
+    },
+    {
+      "Index": 68.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80268.0,
+      "Notes": null
+    },
+    {
+      "Index": 69.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 62420.0,
+      "Notes": null
+    },
+    {
+      "Index": 70.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 78332.0,
+      "Notes": null
+    },
+    {
+      "Index": 71.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 83620.0,
+      "Notes": null
+    },
+    {
+      "Index": 72.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 130656.0,
+      "Notes": null
+    },
+    {
+      "Index": 73.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 14296.0,
+      "Notes": null
+    },
+    {
+      "Index": 74.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7180.0,
+      "Notes": null
+    },
+    {
+      "Index": 75.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 16180.0,
+      "Notes": null
+    },
+    {
+      "Index": 76.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 15432.0,
+      "Notes": null
+    },
+    {
+      "Index": 77.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12040.0,
+      "Notes": null
+    },
+    {
+      "Index": 78.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 16140.0,
+      "Notes": null
+    },
+    {
+      "Index": 79.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 11800.0,
+      "Notes": null
+    },
+    {
+      "Index": 80.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7256.0,
+      "Notes": null
+    },
+    {
+      "Index": 81.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 72496.0,
+      "Notes": null
+    },
+    {
+      "Index": 82.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 157876.0,
+      "Notes": null
+    },
+    {
+      "Index": 83.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 168208.0,
+      "Notes": null
+    },
+    {
+      "Index": 84.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 74744.0,
+      "Notes": null
+    },
+    {
+      "Index": 85.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 70640.0,
+      "Notes": null
+    },
+    {
+      "Index": 86.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80760.0,
+      "Notes": null
+    },
+    {
+      "Index": 87.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 171836.0,
+      "Notes": null
+    },
+    {
+      "Index": 88.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 37116.0,
+      "Notes": null
+    },
+    {
+      "Index": 89.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 15724.0,
+      "Notes": null
+    },
+    {
+      "Index": 90.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 6332.0,
+      "Notes": null
+    },
+    {
+      "Index": 91.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12212.0,
+      "Notes": null
+    },
+    {
+      "Index": 92.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12044.0,
+      "Notes": null
+    },
+    {
+      "Index": 93.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36492.0,
+      "Notes": null
+    },
+    {
+      "Index": 94.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 82384.0,
+      "Notes": null
+    },
+    {
+      "Index": 95.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 113380.0,
+      "Notes": null
+    },
+    {
+      "Index": 96.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 81752.0,
+      "Notes": null
+    },
+    {
+      "Index": 97.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 62808.0,
+      "Notes": null
+    },
+    {
+      "Index": 98.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 173788.0,
+      "Notes": null
+    },
+    {
+      "Index": 99.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 129692.0,
+      "Notes": null
+    },
+    {
+      "Index": 100.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 77124.0,
+      "Notes": "as of 12/4/21"
+    },
+    {
+      "Index": 101.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 81048.0,
+      "Notes": null
+    },
+    {
+      "Index": 102.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 32596.0,
+      "Notes": null
+    },
+    {
+      "Index": 103.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 60092.0,
+      "Notes": null
+    },
+    {
+      "Index": 104.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 81052.0,
+      "Notes": null
+    },
+    {
+      "Index": 105.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 79780.0,
+      "Notes": null
+    },
+    {
+      "Index": 106.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 37140.0,
+      "Notes": null
+    },
+    {
+      "Index": 107.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36800.0,
+      "Notes": null
+    },
+    {
+      "Index": 108.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36492.0,
+      "Notes": null
+    },
+    {
+      "Index": 109.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36720.0,
+      "Notes": null
+    },
+    {
+      "Index": 110.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 78544.0,
+      "Notes": null
+    },
+    {
+      "Index": 111.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 159064.0,
+      "Notes": "I accidentally hit the home button, but it was above 150k - the second time it got 159"
+    },
+    {
+      "Index": 112.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80888.0,
+      "Notes": null
+    },
+    {
+      "Index": 113.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 14692.0,
+      "Notes": null
+    },
+    {
+      "Index": 114.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12216.0,
+      "Notes": null
+    },
+    {
+      "Index": 115.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12196.0,
+      "Notes": null
+    },
+    {
+      "Index": 116.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 16104.0,
+      "Notes": null
+    },
+    {
+      "Index": 117.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80632.0,
+      "Notes": "starting 12/8/21"
+    },
+    {
+      "Index": 118.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 79012.0,
+      "Notes": null
+    },
+    {
+      "Index": 119.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 177500.0,
+      "Notes": null
+    },
+    {
+      "Index": 120.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 16440.0,
+      "Notes": null
+    },
+    {
+      "Index": 121.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80912.0,
+      "Notes": null
+    },
+    {
+      "Index": 122.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 129312.0,
+      "Notes": null
+    },
+    {
+      "Index": 123.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 132756.0,
+      "Notes": null
+    },
+    {
+      "Index": 124.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 36836.0,
+      "Notes": null
+    },
+    {
+      "Index": 125.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 60232.0,
+      "Notes": "starting 12/9/21"
+    },
+    {
+      "Index": 126.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 83896.0,
+      "Notes": null
+    },
+    {
+      "Index": 127.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 135256.0,
+      "Notes": null
+    },
+    {
+      "Index": 128.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 81144.0,
+      "Notes": null
+    },
+    {
+      "Index": 129.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 60812.0,
+      "Notes": null
+    },
+    {
+      "Index": 130.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 38568.0,
+      "Notes": null
+    },
+    {
+      "Index": 131.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 82088.0,
+      "Notes": null
+    },
+    {
+      "Index": 132.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 25.0,
+      "Score": 80320.0,
+      "Notes": "ending 12/9/21"
+    },
+    {
+      "Index": 133.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 10564.0,
+      "Notes": null
+    },
+    {
+      "Index": 134.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 4692.0,
+      "Notes": null
+    },
+    {
+      "Index": 135.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 3240.0,
+      "Notes": null
+    },
+    {
+      "Index": 136.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7092.0,
+      "Notes": null
+    },
+    {
+      "Index": 137.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 15992.0,
+      "Notes": null
+    },
+    {
+      "Index": 138.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 13868.0,
+      "Notes": null
+    },
+    {
+      "Index": 139.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7196.0,
+      "Notes": null
+    },
+    {
+      "Index": 140.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 3380.0,
+      "Notes": null
+    },
+    {
+      "Index": 141.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 11672.0,
+      "Notes": null
+    },
+    {
+      "Index": 142.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 11212.0,
+      "Notes": null
+    },
+    {
+      "Index": 143.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12100.0,
+      "Notes": null
+    },
+    {
+      "Index": 144.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7372.0,
+      "Notes": null
+    },
+    {
+      "Index": 145.0,
+      "Algorithm": "Mc",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 14496.0,
+      "Notes": null
+    },
+    {
+      "Index": 146.0,
+      "Algorithm": "E",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 11525.0,
+      "Notes": null
+    },
+    {
+      "Index": 147.0,
+      "Algorithm": "Igs",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 12228.0,
+      "Notes": null
+    },
+    {
+      "Index": 148.0,
+      "Algorithm": "Rl",
+      "Full Name": null,
+      "Grid Area": 16.0,
+      "Score": 7512.0,
+      "Notes": "end of 12/10/21"
+    }
+  ],
+  "legends": [
+    {
+      "Monte Carlo": "Expectimax Tree",
+      "Mc": "E"
+    },
+    {
+      "Monte Carlo": "IDDFS Graph Search",
+      "Mc": "Igs"
+    },
+    {
+      "Monte Carlo": "Reinforcement Learning",
+      "Mc": "Rl"
+    }
+  ],
+  "generatedAt": "2026-01-01T21:40:45.182383"
+}
