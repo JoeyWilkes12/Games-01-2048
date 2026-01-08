@@ -35,15 +35,28 @@ After all rounds complete, the player with the highest score wins!
 ## Features
 
 - **Manual Rolling**: Click to roll (no automatic timer)
-- **Multi-Player Banking**: After roll 3, ANY player can bank from a dropdown selector
+- **Multi-Select Banking**: After roll 3, select multiple players and bank them all at once
+- **Undo**: Undo last action with Ctrl+Z (supports re-sample or preserve modes)
+- **Probability Display**: Live survival probability + static 2d6 cheatsheet
+- **Gap Column**: Scoreboard shows "+X to tie" for each player vs leader
 - **Visual Feedback**: Dice animations, score pulses, status indicators
-- **Real-time Scoreboard**: See all players ranked by score
+- **Real-time Scoreboard**: See all players ranked by score with gap to leader
 - **Sound Effects**: Optional audio feedback for events
-- **Keyboard Shortcuts**: SPACE to roll, B to bank
+- **Keyboard Shortcuts**: SPACE to roll, B to bank, Ctrl+Z to undo
 - **Mobile Responsive**: Works on phones and tablets
 
-### Multi-Player Banking (After Roll 3)
-Once the protected first 3 rolls are complete, the BANK button becomes a dropdown selector. Any player who hasn't banked yet can be selected to claim the current bank score. This adds strategy—players can discuss who should bank and when!
+### Multi-Player Bulk Banking (After Roll 3)
+Once the protected first 3 rolls are complete, a checkbox panel appears. Select one or more players and click "BANK Selected" to have them all bank the current score simultaneously. This adds group decision-making strategy!
+
+### Undo Modes
+Settings provide two undo modes:
+- **Re-sample**: Undo reverts state, next roll generates new random values
+- **Preserve**: Undo replays the exact same dice sequence (deterministic)
+
+### Probability Dashboard
+- **Survival probability**: Shows (5/6)^rollNumber = odds of no 7 so far
+- **Risk per roll**: Constant 16.67% (1/6) chance of rolling 7
+- **Cheatsheet**: Collapsible table with all 2d6 probabilities (2-12)
 
 ## Default Configuration
 
