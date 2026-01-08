@@ -34,10 +34,9 @@ test.describe('Random Event Dice - UI Enhancements', () => {
         await expect(timerDisplay).toBeVisible();
     });
 
-    test('Footer v2.0.0 is present', async ({ page }) => {
+    test('Footer v2.0.0 is NOT present (Landing page only)', async ({ page }) => {
         const footer = page.locator('.app-footer');
-        await expect(footer).toBeVisible();
-        await expect(footer).toContainText('v2.0.0');
+        await expect(footer).not.toBeVisible();
     });
 
     test('Landing Page Home Button works', async ({ page }) => {
