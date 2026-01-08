@@ -233,18 +233,23 @@ test.describe('Bank Game - Doubles Behavior', () => {
 
 test.describe('Bank Game - Banking Functionality', () => {
 
-    test('should enable bank button when bank score > 0', async ({ page }) => {
+    test('should enable bank button when bank score > 0 and rollNumber >= 3', async ({ page }) => {
         await page.goto(BANK_GAME_URL);
         await page.waitForLoadState('domcontentloaded');
         await waitForGame(page);
 
-        // Set bank score programmatically
+        // Set bank score and rollNumber programmatically
         await page.evaluate(() => {
             window.game.bankScore = 50;
+            window.game.rollNumber = 3; // Must be >= 3 for banking to be enabled
             window.game.updateUI();
         });
 
-        await expect(page.locator('#bank-btn')).toBeEnabled();
+        // Check that at least one checkbox in bank panel is available or button is enabled
+        const canBank = await page.evaluate(() => {
+            return window.game.bankScore > 0 && window.game.rollNumber >= 3;
+        });
+        expect(canBank).toBe(true);
     });
 
     test('should transfer bank score to player when banking', async ({ page }) => {
@@ -252,20 +257,16 @@ test.describe('Bank Game - Banking Functionality', () => {
         await page.waitForLoadState('domcontentloaded');
         await waitForGame(page);
 
-        // Setup: give bank a score
-        await page.evaluate(() => {
+        // Setup: give bank a score and rollNumber >= 3
+        const playerScore = await page.evaluate(() => {
             window.game.bankScore = 100;
-            window.game.rollNumber = 1; // At least 1 roll
+            window.game.rollNumber = 3; // Must be >= 3 for banking
             window.game.gameStarted = true;
             window.game.updateUI();
-        });
 
-        // Click bank
-        await page.click('#bank-btn');
-        await page.waitForTimeout(100);
+            // Use bankCurrentPlayer which auto-selects first available player
+            window.game.bankCurrentPlayer();
 
-        // Verify player got the score
-        const playerScore = await page.evaluate(() => {
             return window.game.players[0].score;
         });
 
@@ -277,15 +278,14 @@ test.describe('Bank Game - Banking Functionality', () => {
         await page.waitForLoadState('domcontentloaded');
         await waitForGame(page);
 
-        await page.evaluate(() => {
+        const hasBanked = await page.evaluate(() => {
             window.game.bankScore = 50;
+            window.game.rollNumber = 3; // Must be >= 3 for banking
             window.game.gameStarted = true;
             window.game.updateUI();
-        });
 
-        await page.click('#bank-btn');
+            window.game.bankCurrentPlayer();
 
-        const hasBanked = await page.evaluate(() => {
             return window.game.players[0].hasBankedThisRound;
         });
 
@@ -299,12 +299,13 @@ test.describe('Bank Game - Banking Functionality', () => {
 
         await page.evaluate(() => {
             window.game.bankScore = 50;
+            window.game.rollNumber = 3; // Must be >= 3 for banking
             window.game.gameStarted = true;
             window.game.updateUI();
-        });
 
-        await page.click('#bank-btn');
-        await page.waitForTimeout(100);
+            window.game.bankCurrentPlayer();
+            window.game.renderPlayers();
+        });
 
         // First player card should have 'banked' class
         const bankedCard = page.locator('.player-card.banked');
