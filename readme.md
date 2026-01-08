@@ -66,20 +66,11 @@ See [tests.md](tests.md) for complete test documentation.
 
 ## Acknowledgements & AI Investment
 This project was developed with significant assistance from advanced AI tools, representing a financial investment in state-of-the-art technology to explore the future of coding.
-
-- **Financial Investment**: Google's AI Pro subscription (utilized even during trial periods to max capability).
-- **Tools**:
-    - **Antigravity**: An advanced agentic coding assistant by Google Deepmind.
-    - **Models Used**:
-        - **Gemini 3 Pro**: For primary reasoning, code generation, and complex task planning.
-        - **Claude Opus 4.5**: Utilized for specific reasoning tasks and alternative perspectives within the agentic workflow.
-
----
-
-## Game Descriptions
-
-### Random Event Dice
-A customizable dice rolling simulation designed for tabletop gaming or probability experiments. Features include event triggers, law of large numbers visualizations, and comprehensive analytics.
+Options:
+- `--demo`: Run full demo recording.
+- `--split`: Run split parallel demos.
+- `--headed`: Run in visible browser.
+- `--speed=2.0`: Run at 2x speed.
 
 ### 2048
 A single-player sliding block puzzle using numbered tiles. Features an Expectimax AI solver, multiple themes, and seeded randomness for reproducible runs.

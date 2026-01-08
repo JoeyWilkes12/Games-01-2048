@@ -1,6 +1,8 @@
-# Random Event Dice 2.0
+# Random Event Dice Generator
 
-A web-based dice rolling game with configurable event triggers, designed for random event generation in tabletop games or probabilistic simulations.
+**Version:** 2.0.0
+
+A highly configurable dice rolling application designed for group games, probability testing, and event simulation in tabletop games or probabilistic simulations.
 
 ## Features
 

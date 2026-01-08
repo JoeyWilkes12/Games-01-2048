@@ -13,15 +13,19 @@ const { test, expect } = require('@playwright/test');
 const path = require('path');
 
 // Configuration for demo pace
+// Configuration with environment variable overrides
+const SPEED_MULTIPLIER = process.env.DEMO_SPEED ? parseFloat(process.env.DEMO_SPEED) : 1.0;
+const HEADLESS = process.env.HEADLESS === 'true';
+
 const DEMO_CONFIG = {
-    shortPause: 400,      // Brief pause for element visibility
-    mediumPause: 800,     // Standard viewing pause
-    longPause: 1500,      // Extended pause for complex features
-    veryLongPause: 2500,  // Long pause for important demonstrations
-    gameRunPause: 5000,   // Let game run for 5 seconds (uninterrupted)
-    slowScrollPause: 10000, // Slow scroll duration (10 seconds)
-    finalScrollPause: 5000, // Final scroll viewing (5 seconds)
-    fullPageScrollStep: 200, // Pixels per scroll step for slow scrolling
+    shortPause: 400 * (1 / SPEED_MULTIPLIER),
+    mediumPause: 800 * (1 / SPEED_MULTIPLIER),
+    longPause: 1500 * (1 / SPEED_MULTIPLIER),
+    veryLongPause: 2500 * (1 / SPEED_MULTIPLIER),
+    gameRunPause: 5000 * (1 / SPEED_MULTIPLIER),
+    slowScrollPause: 10000 * (1 / SPEED_MULTIPLIER),
+    finalScrollPause: 5000 * (1 / SPEED_MULTIPLIER),
+    fullPageScrollStep: 200,
 };
 
 // Base URL for navigation fallback
@@ -96,45 +100,46 @@ const expandSettingsPanel = async (page) => {
 };
 
 // Helper for slow vertical scrolling (full page)
-const slowFullVerticalScroll = async (page, durationMs = 10000, container = null) => {
+const slowFullVerticalScroll = async (page, durationMs = 10000, containerSelector = null) => {
     const stepDelay = 100; // ms between scroll steps
+    // Adjust duration by speed multiplier if not already applied (it is in DEMO_CONFIG)
     const totalSteps = Math.floor(durationMs / stepDelay / 2); // Half time down, half time up
 
-    // Get scroll height
-    const scrollData = await page.evaluate((containerSelector) => {
-        const el = containerSelector ? document.querySelector(containerSelector) : document.documentElement;
+    // Get scroll height - Pass args as a single object to avoid "Too many arguments" error
+    const scrollData = await page.evaluate(({ selector }) => {
+        const el = selector ? document.querySelector(selector) : document.documentElement;
         return {
             scrollHeight: el.scrollHeight,
             clientHeight: el.clientHeight || window.innerHeight
         };
-    }, container);
+    }, { selector: containerSelector });
 
     const maxScroll = scrollData.scrollHeight - scrollData.clientHeight;
     const stepSize = Math.ceil(maxScroll / totalSteps);
 
     // Scroll down slowly
     for (let pos = 0; pos < maxScroll; pos += stepSize) {
-        await page.evaluate((y, containerSelector) => {
-            const el = containerSelector ? document.querySelector(containerSelector) : window;
+        await page.evaluate(({ y, selector }) => {
+            const el = selector ? document.querySelector(selector) : window;
             if (el === window) {
                 window.scrollTo({ top: y, behavior: 'auto' });
             } else {
                 el.scrollTop = y;
             }
-        }, pos, container);
+        }, { y: pos, selector: containerSelector });
         await page.waitForTimeout(stepDelay);
     }
 
     // Scroll up slowly
     for (let pos = maxScroll; pos >= 0; pos -= stepSize) {
-        await page.evaluate((y, containerSelector) => {
-            const el = containerSelector ? document.querySelector(containerSelector) : window;
+        await page.evaluate(({ y, selector }) => {
+            const el = selector ? document.querySelector(selector) : window;
             if (el === window) {
                 window.scrollTo({ top: y, behavior: 'auto' });
             } else {
                 el.scrollTop = y;
             }
-        }, pos, container);
+        }, { y: pos, selector: containerSelector });
         await page.waitForTimeout(stepDelay);
     }
 };

@@ -17,7 +17,17 @@
         <header>
             <a href="../../../index.html" class="home-btn" title="Back to Game Hub">🏠</a>
             <h1>Random Event Dice</h1>
-            <div class="timer-display" id="timer-display">60:00</div>
+            <div class="timer-container">
+                <div class="timer-display" id="timer-display">60:00</div>
+                <button id="toggle-timer-visibility" class="icon-button" title="Hide/Show Timer"
+                    aria-label="Toggle Timer Visibility">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="arrow-icon" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
         </header>
 
         <main class="game-area">
@@ -240,6 +250,9 @@
 
     <!-- Audio context for simple beep -->
     <script src="script.js"></script>
+    <footer class="app-footer">
+        <p>v2.0.0</p>
+    </footer>
 </body>
 
 </html>
