@@ -4,10 +4,10 @@ const path = require('path');
 const SPEED_MULTIPLIER = process.env.DEMO_SPEED ? parseFloat(process.env.DEMO_SPEED) : 1.0;
 
 const DEMO_CONFIG = {
-    shortPause: 400 * (1 / SPEED_MULTIPLIER),
-    mediumPause: 800 * (1 / SPEED_MULTIPLIER),
-    longPause: 1500 * (1 / SPEED_MULTIPLIER),
-    veryLongPause: 2500 * (1 / SPEED_MULTIPLIER),
+    shortPause: 300 * (1 / SPEED_MULTIPLIER),
+    mediumPause: 600 * (1 / SPEED_MULTIPLIER),
+    longPause: 1000 * (1 / SPEED_MULTIPLIER),
+    veryLongPause: 1500 * (1 / SPEED_MULTIPLIER),
 };
 
 const pause = async (page, duration = DEMO_CONFIG.mediumPause) => await page.waitForTimeout(duration);
@@ -65,7 +65,9 @@ test.describe('Sliding Puzzle Demo', () => {
         // AI Auto-Solve
         console.log('🤖 Using Play for Me (AI auto-solve)...');
         await slowClick(page, '#solve-btn');
-        await pause(page, 8000);
+
+        // Wait for AI to solve or timeout after 10 seconds
+        await page.waitForTimeout(10000 * (1 / SPEED_MULTIPLIER));
 
         // Check win
         const winOverlay = page.locator('#win-overlay');

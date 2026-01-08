@@ -148,8 +148,8 @@ const slowFullVerticalScroll = async (page, durationMs = 10000, containerSelecto
 test.describe('Game Hub - Full Demo Recording', () => {
 
     test('Complete Application Walkthrough', async ({ page }) => {
-        // Set generous timeout for the full demo (15 minutes)
-        test.setTimeout(900000);
+        // Set reasonable timeout for the full demo (5 minutes)
+        test.setTimeout(300000);
 
         const baseUrl = getBaseUrl();
 

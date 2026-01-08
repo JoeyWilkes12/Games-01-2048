@@ -9,9 +9,9 @@ const DEMO_CONFIG = {
     mediumPause: 800 * (1 / SPEED_MULTIPLIER),
     longPause: 1500 * (1 / SPEED_MULTIPLIER),
     veryLongPause: 2500 * (1 / SPEED_MULTIPLIER),
-    gameRunPause: 5000 * (1 / SPEED_MULTIPLIER),
-    slowScrollPause: 10000 * (1 / SPEED_MULTIPLIER),
-    finalScrollPause: 5000 * (1 / SPEED_MULTIPLIER),
+    gameRunPause: 3000 * (1 / SPEED_MULTIPLIER),   // Reduced from 5s to 3s
+    slowScrollPause: 4000 * (1 / SPEED_MULTIPLIER), // Reduced from 10s to 4s
+    finalScrollPause: 2000 * (1 / SPEED_MULTIPLIER), // Reduced from 5s to 2s
 };
 
 // Base URL
