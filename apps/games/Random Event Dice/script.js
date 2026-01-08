@@ -478,7 +478,12 @@ class DiceGame {
             timelineSection: document.getElementById('timeline-section'),
             heatmapContainer: document.getElementById('heatmap-container'),
             heatmapSection: document.getElementById('heatmap-section'),
-            skipToEndBtn: document.getElementById('skip-to-end-btn')
+            skipToEndBtn: document.getElementById('skip-to-end-btn'),
+            // New elements for player config and panel width
+            panelWidthInput: document.getElementById('panel-width-input'),
+            panelWidthDisplay: document.getElementById('panel-width-display'),
+            playerList: document.getElementById('player-list'),
+            addPlayerBtn: document.getElementById('add-player-btn')
         };
 
         // Initialize debug console
@@ -863,6 +868,29 @@ class DiceGame {
             this.dom.jsonFileInput.addEventListener('change', (e) => this.importConfig(e));
         }
 
+        // Panel width listener
+        if (this.dom.panelWidthInput) {
+            this.dom.panelWidthInput.value = this.settings.analytics.panelWidth;
+            this.dom.panelWidthDisplay.textContent = `${this.settings.analytics.panelWidth}px`;
+            this.dom.panelWidthInput.addEventListener('input', (e) => {
+                const width = parseInt(e.target.value);
+                this.settings.analytics.panelWidth = width;
+                this.dom.panelWidthDisplay.textContent = `${width}px`;
+                if (this.dom.analyticsPanel) {
+                    this.dom.analyticsPanel.style.width = `${width}px`;
+                }
+            });
+            // Apply initial width
+            if (this.dom.analyticsPanel) {
+                this.dom.analyticsPanel.style.width = `${this.settings.analytics.panelWidth}px`;
+            }
+        }
+
+        // Add player button listener
+        if (this.dom.addPlayerBtn) {
+            this.dom.addPlayerBtn.addEventListener('click', () => this.addPlayerToList());
+        }
+
         // Initial render
         this.renderDice(true);
 
@@ -926,6 +954,7 @@ class DiceGame {
 
     openAdvancedModal() {
         this.dom.advancedModal.classList.remove('hidden');
+        this.renderPlayerList();
         this.renderEventDefinitionsUI();
     }
 
@@ -933,7 +962,105 @@ class DiceGame {
         this.dom.advancedModal.classList.add('hidden');
     }
 
+    // --- Player Configuration ---
+
+    renderPlayerList() {
+        if (!this.dom.playerList) return;
+
+        this.dom.playerList.innerHTML = '';
+        const playerCount = Object.keys(this.settings.players).length;
+
+        for (let i = 1; i <= playerCount; i++) {
+            const playerName = this.settings.players[i] || `Player ${i}`;
+            this.addPlayerInputToDOM(i, playerName);
+        }
+    }
+
+    addPlayerInputToDOM(index, name) {
+        const item = document.createElement('div');
+        item.className = 'player-item';
+        item.dataset.playerIndex = index;
+        item.style.cssText = 'display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;';
+
+        const label = document.createElement('span');
+        label.textContent = `${index}.`;
+        label.style.cssText = 'width: 24px; color: var(--secondary-color); font-weight: 600;';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = name;
+        input.placeholder = `Player ${index}`;
+        input.className = 'player-name-input';
+        input.style.cssText = 'flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--input-bg); color: var(--input-text); font-family: inherit;';
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '×';
+        removeBtn.className = 'remove-player-btn';
+        removeBtn.style.cssText = 'width: 28px; height: 28px; background: transparent; border: 1px solid var(--accent-color); border-radius: 4px; color: var(--accent-color); cursor: pointer; font-size: 1.25rem; line-height: 1;';
+        removeBtn.addEventListener('click', () => this.removePlayerFromList(index));
+
+        item.appendChild(label);
+        item.appendChild(input);
+        item.appendChild(removeBtn);
+        this.dom.playerList.appendChild(item);
+    }
+
+    addPlayerToList() {
+        const playerCount = this.dom.playerList.querySelectorAll('.player-item').length;
+        if (playerCount >= 15) {
+            console.warn('[Players] Maximum of 15 players reached');
+            return;
+        }
+        const newIndex = playerCount + 1;
+        const defaultName = `Player ${newIndex}`;
+        this.addPlayerInputToDOM(newIndex, defaultName);
+    }
+
+    removePlayerFromList(index) {
+        const items = this.dom.playerList.querySelectorAll('.player-item');
+        if (items.length <= 1) {
+            console.warn('[Players] Cannot remove last player');
+            return;
+        }
+
+        // Remove the item and reindex
+        this.dom.playerList.innerHTML = '';
+        let newIndex = 1;
+        items.forEach(item => {
+            if (parseInt(item.dataset.playerIndex) !== index) {
+                const input = item.querySelector('.player-name-input');
+                const name = input.value || `Player ${newIndex}`;
+                this.addPlayerInputToDOM(newIndex, name);
+                newIndex++;
+            }
+        });
+    }
+
+    savePlayersFromUI() {
+        const newPlayers = {};
+        const items = this.dom.playerList.querySelectorAll('.player-item');
+        items.forEach((item, idx) => {
+            const input = item.querySelector('.player-name-input');
+            newPlayers[idx + 1] = input.value || `Player ${idx + 1}`;
+        });
+
+        this.settings.players = newPlayers;
+
+        // Update analytics tracker with new players
+        this.analytics.updateConfig(
+            this.settings.players,
+            this.settings.diceCount,
+            this.settings.diceSides
+        );
+
+        console.debug(`[Players] Saved ${Object.keys(newPlayers).length} players`);
+    }
+
     saveAdvancedSettings() {
+        // Save player configuration first
+        this.savePlayersFromUI();
+
         // Parse UI to update settings.eventDefinitions
         const newDefinitions = [];
         const defEls = this.dom.eventList.querySelectorAll('.event-def');
@@ -1096,10 +1223,10 @@ class DiceGame {
 
     exportConfig() {
         const config = {
-            version: '2.0',
+            version: '2.1',
             settings: {
-                interval: this.settings.interval,
-                resetDuration: this.settings.resetDuration,
+                interval: this.settings.interval / 1000, // Export as seconds
+                resetDuration: this.settings.resetDuration / 1000, // Export as seconds
                 diceCount: this.settings.diceCount,
                 diceSides: this.settings.diceSides,
                 duration: this.settings.duration,
@@ -1231,17 +1358,34 @@ class DiceGame {
     }
 
     applyConfig(config) {
+        // Detect config version for backward compatibility
+        // v2.1+ uses seconds for interval/resetDuration, v2.0 and earlier used milliseconds
+        const isSecondsFormat = config.version && parseFloat(config.version) >= 2.1;
+
         // Apply settings
         if (config.settings) {
             const s = config.settings;
 
             if (s.interval !== undefined) {
-                this.settings.interval = s.interval;
-                this.dom.inputs.interval.value = s.interval / 1000;
+                // v2.1+ stores as seconds, v2.0 stored as milliseconds
+                if (isSecondsFormat) {
+                    this.settings.interval = s.interval * 1000;
+                    this.dom.inputs.interval.value = s.interval;
+                } else {
+                    this.settings.interval = s.interval;
+                    this.dom.inputs.interval.value = s.interval / 1000;
+                }
             }
             if (s.resetDuration !== undefined) {
-                this.settings.resetDuration = s.resetDuration;
-                this.dom.inputs.resetDuration.value = s.resetDuration;
+                // v2.1+ stores as seconds, v2.0 stored as milliseconds
+                if (isSecondsFormat) {
+                    this.settings.resetDuration = s.resetDuration * 1000;
+                    this.dom.inputs.resetDuration.value = s.resetDuration;
+                } else {
+                    // Legacy: stored in ms, but UI now expects seconds
+                    this.settings.resetDuration = s.resetDuration;
+                    this.dom.inputs.resetDuration.value = s.resetDuration / 1000;
+                }
             }
             if (s.diceCount !== undefined) {
                 this.settings.diceCount = s.diceCount;

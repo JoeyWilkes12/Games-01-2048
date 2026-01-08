@@ -642,16 +642,16 @@ header h1 {
     top: 0;
     left: 0;
     height: 100vh;
-    width: 75vw;
-    min-width: 300px;
-    max-width: 90vw;
+    width: 320px;
+    /* Default, controlled by JS */
+    min-width: 280px;
+    max-width: 600px;
     background: var(--surface-color);
     border-right: 2px solid var(--primary-color);
     z-index: 90;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, width 0.1s ease;
-    resize: horizontal;
+    transition: transform 0.3s ease;
     overflow: hidden;
 }
 
@@ -881,13 +881,15 @@ header h1 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-width: 260px;
 }
 
 .heatmap-grid {
     display: grid;
-    grid-template-columns: 30px repeat(6, 1fr);
+    grid-template-columns: 28px repeat(6, 32px);
     gap: 2px;
     font-size: 0.7rem;
+    justify-content: start;
 }
 
 .heatmap-cell {
@@ -1007,5 +1009,169 @@ header h1 {
 
     50% {
         background: rgba(239, 68, 68, 0.3);
+    }
+}
+
+/* ============================================
+   Mobile Responsive Styles
+   ============================================ */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+    .app-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    header {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1rem;
+    }
+
+    .timer-display {
+        font-size: 1.25rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .game-area {
+        padding: 1rem;
+    }
+
+    .die {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .dice-container {
+        gap: 1rem;
+    }
+
+    .controls-panel {
+        padding: 1rem;
+        max-height: 45vh;
+    }
+
+    .settings-content {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Analytics panel becomes full-width overlay on mobile */
+    .analytics-panel {
+        width: 100vw !important;
+        max-width: 100vw;
+        min-width: unset;
+    }
+
+    .analytics-content {
+        padding: 0.75rem;
+    }
+
+    .leaderboard-item .player-stats {
+        font-size: 0.65rem;
+    }
+
+    /* Debug console smaller on mobile */
+    .debug-console {
+        width: 280px;
+        max-height: 300px;
+    }
+
+    .debug-console.collapsed {
+        width: 36px;
+    }
+
+    /* Modal full-width on mobile */
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+    header {
+        padding: 0.75rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    header h1 {
+        font-size: 0.9rem;
+        flex: 1;
+    }
+
+    .home-btn {
+        font-size: 1.25rem;
+    }
+
+    .die {
+        width: 55px;
+        height: 55px;
+        font-size: 1.5rem;
+        border-radius: 12px;
+    }
+
+    .dice-container {
+        gap: 0.75rem;
+    }
+
+    .controls-panel {
+        padding: 0.75rem;
+    }
+
+    .settings-content {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        width: 100%;
+        padding: 0.625rem 1rem;
+    }
+
+    .alert-message {
+        font-size: 1rem;
+        padding: 0.4rem 1rem;
+    }
+
+    /* Heatmap smaller on mobile */
+    .heatmap-container {
+        max-width: 220px;
+    }
+
+    .heatmap-grid {
+        grid-template-columns: 24px repeat(6, 28px);
+        font-size: 0.65rem;
+    }
+
+    .heatmap-cell {
+        border-radius: 3px;
+    }
+
+    .timeline-item {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.4rem;
+    }
+
+    .leaderboard-item {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+    }
+
+    /* Hide debug toggle on very small screens */
+    .debug-console {
+        display: none;
     }
 }

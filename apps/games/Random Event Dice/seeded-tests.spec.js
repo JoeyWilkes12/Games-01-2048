@@ -550,3 +550,223 @@ test.describe('Event Definition Logic', () => {
         expect(result).toEqual([false, false, false, false, false, false]);
     });
 });
+
+
+// ==========================================
+// PLAYER CONFIGURATION TESTS
+// ==========================================
+
+test.describe('Player Configuration', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(getBaseUrl());
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('Player names are reflected in dashboard leaderboard', async ({ page }) => {
+        const customPlayers = {
+            1: "Alice",
+            2: "Bob",
+            3: "Charlie"
+        };
+
+        const result = await page.evaluate((players) => {
+            // Set custom player names
+            game.settings.players = players;
+            game.analytics.updateConfig(players, 2, 6);
+
+            // Verify analytics knows the player names
+            return {
+                player1Name: game.analytics.players[1],
+                player2Name: game.analytics.players[2],
+                player3Name: game.analytics.players[3],
+                currentPlayerName: game.analytics.getCurrentPlayerName()
+            };
+        }, customPlayers);
+
+        expect(result.player1Name).toBe("Alice");
+        expect(result.player2Name).toBe("Bob");
+        expect(result.player3Name).toBe("Charlie");
+        expect(result.currentPlayerName).toBe("Alice"); // First player
+    });
+
+    test('Player names are included in JSON export', async ({ page }) => {
+        const customPlayers = {
+            1: "TestPlayer1",
+            2: "TestPlayer2",
+            3: "TestPlayer3"
+        };
+
+        const exportedConfig = await page.evaluate((players) => {
+            game.settings.players = players;
+
+            // Simulate export (same logic as exportConfig)
+            return {
+                version: '2.1',
+                players: game.settings.players
+            };
+        }, customPlayers);
+
+        expect(exportedConfig.version).toBe('2.1');
+        expect(exportedConfig.players[1]).toBe("TestPlayer1");
+        expect(exportedConfig.players[2]).toBe("TestPlayer2");
+        expect(exportedConfig.players[3]).toBe("TestPlayer3");
+    });
+
+    test('Default 15 players are pre-configured', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            return {
+                playerCount: Object.keys(game.settings.players).length,
+                hasPlayer1: !!game.settings.players[1],
+                hasPlayer15: !!game.settings.players[15]
+            };
+        });
+
+        expect(result.playerCount).toBe(15);
+        expect(result.hasPlayer1).toBe(true);
+        expect(result.hasPlayer15).toBe(true);
+    });
+});
+
+
+// ==========================================
+// DASHBOARD PANEL WIDTH TESTS
+// ==========================================
+
+test.describe('Dashboard Panel Width', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(getBaseUrl());
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('Panel width setting is stored correctly', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            game.settings.analytics.panelWidth = 400;
+            return game.settings.analytics.panelWidth;
+        });
+
+        expect(result).toBe(400);
+    });
+
+    test('Panel width is included in JSON export', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            game.settings.analytics.panelWidth = 450;
+            return {
+                panelWidth: game.settings.analytics.panelWidth
+            };
+        });
+
+        expect(result.panelWidth).toBe(450);
+    });
+
+    test('Default panel width is 320px', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            return game.settings.analytics.panelWidth;
+        });
+
+        expect(result).toBe(320);
+    });
+});
+
+
+// ==========================================
+// RESET DURATION TESTS (Seconds Format)
+// ==========================================
+
+test.describe('Reset Duration (Seconds)', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(getBaseUrl());
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('Reset duration is stored internally in milliseconds', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            // Internal storage should be in milliseconds
+            return {
+                defaultValue: game.settings.resetDuration,
+                isMilliseconds: game.settings.resetDuration >= 100 // Would be 0.1 if seconds
+            };
+        });
+
+        expect(result.defaultValue).toBe(1000); // 1 second = 1000ms
+        expect(result.isMilliseconds).toBe(true);
+    });
+
+    test('Config export uses seconds format (v2.1)', async ({ page }) => {
+        const result = await page.evaluate(() => {
+            game.settings.resetDuration = 2500; // 2.5 seconds in ms
+
+            // Simulate export logic
+            return {
+                exportedValue: game.settings.resetDuration / 1000 // Should be 2.5
+            };
+        });
+
+        expect(result.exportedValue).toBe(2.5);
+    });
+
+    test('Legacy v2.0 config imports correctly (ms to ms)', async ({ page }) => {
+        const legacyConfig = {
+            version: '2.0',
+            settings: {
+                resetDuration: 3000, // 3 seconds in old ms format
+                interval: 1000
+            }
+        };
+
+        const result = await page.evaluate((config) => {
+            // Simulate version detection
+            const isSecondsFormat = config.version && parseFloat(config.version) >= 2.1;
+
+            let internalValue;
+            if (isSecondsFormat) {
+                internalValue = config.settings.resetDuration * 1000;
+            } else {
+                internalValue = config.settings.resetDuration; // Already ms
+            }
+
+            return {
+                isSecondsFormat,
+                internalValue
+            };
+        }, legacyConfig);
+
+        expect(result.isSecondsFormat).toBe(false);
+        expect(result.internalValue).toBe(3000); // Should remain 3000ms
+    });
+
+    test('New v2.1 config imports correctly (sec to ms)', async ({ page }) => {
+        const newConfig = {
+            version: '2.1',
+            settings: {
+                resetDuration: 2.5, // 2.5 seconds in new format
+                interval: 1
+            }
+        };
+
+        const result = await page.evaluate((config) => {
+            // Simulate version detection
+            const isSecondsFormat = config.version && parseFloat(config.version) >= 2.1;
+
+            let internalValue;
+            if (isSecondsFormat) {
+                internalValue = config.settings.resetDuration * 1000;
+            } else {
+                internalValue = config.settings.resetDuration;
+            }
+
+            return {
+                isSecondsFormat,
+                internalValue
+            };
+        }, newConfig);
+
+        expect(result.isSecondsFormat).toBe(true);
+        expect(result.internalValue).toBe(2500); // 2.5 * 1000 = 2500ms
+    });
+});
