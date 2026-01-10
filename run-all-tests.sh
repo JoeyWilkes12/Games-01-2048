@@ -142,6 +142,10 @@ if [ "$RUN_TESTS" = true ]; then
     # Bank seeded tests
     run_test "Bank - Seeded Tests" \
         "npx playwright test apps/games/Bank/seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
+    
+    # 2048 seeded tests
+    run_test "2048 - Seeded Tests" \
+        "npx playwright test apps/games/2048/seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
 fi
 
 # Run Split Demo Tests (parallel)

@@ -171,6 +171,7 @@ const settingsBtn = document.getElementById('settings-btn');
 const settingsModal = document.getElementById('settings-modal');
 const closeSettingsBtn = document.getElementById('close-settings');
 const themePicker = document.getElementById('theme-picker');
+const algoPicker = document.getElementById('algo-picker');
 const speedRange = document.getElementById('speed-range');
 
 // --- State ---
@@ -251,6 +252,14 @@ function setupSettings() {
         // Value 500 = 50ms delay. Value 50 = 500ms delay.
         autoSpeed = 550 - parseInt(e.target.value);
     });
+
+    // Algorithm selection
+    if (algoPicker) {
+        algoPicker.addEventListener('change', (e) => {
+            ALGORITHM_CONFIG.current = e.target.value;
+            console.log('Algorithm switched to:', e.target.value);
+        });
+    }
 }
 
 // --- Game Logic ---
@@ -545,7 +554,7 @@ function stopAutoPlay() {
 function playNextMove() {
     if (!isAutoPlaying || gameOver) return;
 
-    let bestMove = getBestMove(board, 3); // Depth 3 or 4
+    let bestMove = getBestMoveUnified(board); // Uses selected algorithm
     if (bestMove !== -1) {
         move(bestMove);
         afterMove(); // This handles addRandomTile and render
@@ -654,12 +663,39 @@ function getEmptySpots(grid) {
     return spots;
 }
 
+// ===================================
+// Algorithm Configuration
+// ===================================
+const ALGORITHM_CONFIG = {
+    current: 'expectimax', // 'expectimax', 'mcts', 'greedy'
+    expectimax: {
+        baseDepth: 3,
+        adaptiveDepth: true
+    },
+    mcts: {
+        simulations: 100,
+        maxDepth: 50
+    },
+    // Heuristic weights for Expectimax
+    weights: {
+        position: 1.0,      // Snake pattern weight
+        monotonicity: 1.5,  // Monotonicity bonus
+        smoothness: 0.5,    // Smoothness bonus
+        emptyCells: 2.7     // Empty cell bonus
+    }
+};
+
+// Expose algorithm config for testing
+if (typeof Game2048 !== 'undefined') {
+    Game2048.getAlgorithmConfig = function () { return ALGORITHM_CONFIG; };
+    Game2048.setAlgorithm = function (algo) { ALGORITHM_CONFIG.current = algo; };
+}
+
+// ===================================
 // Heuristics
-// 1. Monotonicity (Tiles increasing/decreasing order)
-// 2. Smoothness (Adjacent tiles close in value)
-// 3. Max Tile (Higher is better)
-// 4. Empty Cells (More space = better)
-// Simplified: Weighted Grid (Snake pattern usually works)
+// ===================================
+
+// Snake pattern weight matrix (corner strategy)
 const WEIGHT_MATRIX = [
     [65536, 32768, 16384, 8192],
     [512, 1024, 2048, 4096],
@@ -667,7 +703,8 @@ const WEIGHT_MATRIX = [
     [2, 4, 8, 16]
 ];
 
-function evaluateGrid(grid) {
+// Position-based score (snake pattern)
+function positionScore(grid) {
     let score = 0;
     for (let r = 0; r < 4; r++) {
         for (let c = 0; c < 4; c++) {
@@ -675,6 +712,254 @@ function evaluateGrid(grid) {
         }
     }
     return score;
+}
+
+// Monotonicity: Reward boards where tiles are ordered
+// Higher score = more monotonic (tiles increasing/decreasing consistently)
+function monotonicity(grid) {
+    let totals = [0, 0, 0, 0]; // up, down, left, right
+
+    // Check rows (left-right monotonicity)
+    for (let r = 0; r < 4; r++) {
+        let current = 0;
+        let next = current + 1;
+        while (next < 4) {
+            while (next < 4 && grid[r][next] === 0) next++;
+            if (next >= 4) break;
+
+            let currentValue = grid[r][current] !== 0 ? Math.log2(grid[r][current]) : 0;
+            let nextValue = grid[r][next] !== 0 ? Math.log2(grid[r][next]) : 0;
+
+            if (currentValue > nextValue) {
+                totals[0] += nextValue - currentValue; // Left monotonicity
+            } else if (nextValue > currentValue) {
+                totals[1] += currentValue - nextValue; // Right monotonicity
+            }
+            current = next;
+            next++;
+        }
+    }
+
+    // Check columns (up-down monotonicity)
+    for (let c = 0; c < 4; c++) {
+        let current = 0;
+        let next = current + 1;
+        while (next < 4) {
+            while (next < 4 && grid[next][c] === 0) next++;
+            if (next >= 4) break;
+
+            let currentValue = grid[current][c] !== 0 ? Math.log2(grid[current][c]) : 0;
+            let nextValue = grid[next][c] !== 0 ? Math.log2(grid[next][c]) : 0;
+
+            if (currentValue > nextValue) {
+                totals[2] += nextValue - currentValue; // Up monotonicity
+            } else if (nextValue > currentValue) {
+                totals[3] += currentValue - nextValue; // Down monotonicity
+            }
+            current = next;
+            next++;
+        }
+    }
+
+    return Math.max(totals[0], totals[1]) + Math.max(totals[2], totals[3]);
+}
+
+// Smoothness: Penalize large differences between adjacent tiles
+// Lower penalty = smoother board = easier merges
+function smoothness(grid) {
+    let smoothness = 0;
+    for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+            if (grid[r][c] !== 0) {
+                let value = Math.log2(grid[r][c]);
+                // Check right neighbor
+                for (let c2 = c + 1; c2 < 4; c2++) {
+                    if (grid[r][c2] !== 0) {
+                        smoothness -= Math.abs(value - Math.log2(grid[r][c2]));
+                        break;
+                    }
+                }
+                // Check down neighbor
+                for (let r2 = r + 1; r2 < 4; r2++) {
+                    if (grid[r2][c] !== 0) {
+                        smoothness -= Math.abs(value - Math.log2(grid[r2][c]));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return smoothness;
+}
+
+// Empty cells bonus: More space = more options
+function emptyCellsScore(grid) {
+    let count = 0;
+    for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+            if (grid[r][c] === 0) count++;
+        }
+    }
+    return count;
+}
+
+// Max tile value (for tiebreaking)
+function maxTileValue(grid) {
+    let max = 0;
+    for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+            if (grid[r][c] > max) max = grid[r][c];
+        }
+    }
+    return max;
+}
+
+// Combined evaluation function
+function evaluateGrid(grid) {
+    const w = ALGORITHM_CONFIG.weights;
+
+    let score = 0;
+    score += positionScore(grid) * w.position;
+    score += monotonicity(grid) * w.monotonicity * 10000;
+    score += smoothness(grid) * w.smoothness * 1000;
+    score += emptyCellsScore(grid) * w.emptyCells * 10000;
+
+    return score;
+}
+
+// Adaptive depth based on board state
+function getAdaptiveDepth(grid) {
+    if (!ALGORITHM_CONFIG.expectimax.adaptiveDepth) {
+        return ALGORITHM_CONFIG.expectimax.baseDepth;
+    }
+
+    const empty = getEmptySpots(grid).length;
+    const maxTile = maxTileValue(grid);
+
+    // Increase depth in critical situations
+    if (empty <= 2) return 5;
+    if (empty <= 4 && maxTile >= 512) return 4;
+    return ALGORITHM_CONFIG.expectimax.baseDepth;
+}
+
+// ===================================
+// Monte Carlo Tree Search (MCTS)
+// ===================================
+
+// Simulate a random game from the current state
+function simulateRandomGame(grid, firstMove) {
+    let simGrid = copyGrid(grid);
+    let simScore = 0;
+
+    // Apply first move
+    let result = simulateMove(simGrid, firstMove);
+    if (!result.moved) return -1; // Invalid first move
+
+    simGrid = result.board;
+    simScore += result.score;
+
+    // Add random tile
+    let empty = getEmptySpots(simGrid);
+    if (empty.length > 0) {
+        let spot = empty[Math.floor(Math.random() * empty.length)];
+        simGrid[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+    }
+
+    // Play random moves until game over or max depth
+    for (let i = 0; i < ALGORITHM_CONFIG.mcts.maxDepth; i++) {
+        // Try random moves
+        let moves = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+        let moved = false;
+
+        for (let move of moves) {
+            result = simulateMove(simGrid, move);
+            if (result.moved) {
+                simGrid = result.board;
+                simScore += result.score;
+                moved = true;
+
+                // Add random tile
+                empty = getEmptySpots(simGrid);
+                if (empty.length > 0) {
+                    let spot = empty[Math.floor(Math.random() * empty.length)];
+                    simGrid[spot.r][spot.c] = Math.random() < 0.9 ? 2 : 4;
+                }
+                break;
+            }
+        }
+
+        if (!moved) break; // Game over
+    }
+
+    return simScore + evaluateGrid(simGrid) * 0.001;
+}
+
+// Get best move using MCTS
+function getMCTSMove(grid) {
+    const moves = [0, 1, 2, 3];
+    const scores = [0, 0, 0, 0];
+    const counts = [0, 0, 0, 0];
+
+    const simulations = ALGORITHM_CONFIG.mcts.simulations;
+
+    for (let i = 0; i < simulations; i++) {
+        const move = i % 4; // Distribute simulations evenly
+        const score = simulateRandomGame(grid, move);
+
+        if (score >= 0) {
+            scores[move] += score;
+            counts[move]++;
+        }
+    }
+
+    // Find best average score
+    let bestMove = -1;
+    let bestAvg = -Infinity;
+
+    for (let m = 0; m < 4; m++) {
+        if (counts[m] > 0) {
+            const avg = scores[m] / counts[m];
+            if (avg > bestAvg) {
+                bestAvg = avg;
+                bestMove = m;
+            }
+        }
+    }
+
+    return bestMove;
+}
+
+// Get best move using Greedy (immediate score only)
+function getGreedyMove(grid) {
+    let bestMove = -1;
+    let bestScore = -Infinity;
+
+    for (let dir = 0; dir < 4; dir++) {
+        let sim = simulateMove(grid, dir);
+        if (sim.moved) {
+            let score = sim.score + evaluateGrid(sim.board);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = dir;
+            }
+        }
+    }
+
+    return bestMove;
+}
+
+// Unified move selection based on current algorithm
+function getBestMoveUnified(grid) {
+    switch (ALGORITHM_CONFIG.current) {
+        case 'mcts':
+            return getMCTSMove(grid);
+        case 'greedy':
+            return getGreedyMove(grid);
+        case 'expectimax':
+        default:
+            const depth = getAdaptiveDepth(grid);
+            return getBestMove(grid, depth);
+    }
 }
 
 // Start

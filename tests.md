@@ -56,6 +56,23 @@ Tests include:
 - Game over logic
 - Settings and new game
 
+### 2048 - Seeded Tests
+Comprehensive tests for 2048 game logic and AI algorithms.
+
+```bash
+npx playwright test apps/games/2048/seeded-tests.spec.js --project=tests
+```
+
+Tests include:
+- Configuration loading (default and JSON files)
+- Seeded RNG determinism
+- Algorithm selection (Expectimax, MCTS, Greedy)
+- Core game mechanics (merge, move, score)
+- Board validation (anti-cheat)
+- Heuristic function correctness
+- Win/loss condition detection
+- Browser unit test integration
+
 ---
 
 ### 2. Split Demo Tests (Parallel)
@@ -190,7 +207,7 @@ interstellar-zodiac/
 |------|-------------|
 | Random Event Dice | `apps/games/Random Event Dice/seeded-tests.spec.js`, `playwright.test.js`, `new-seeded-tests.spec.js` |
 | Bank | `apps/games/Bank/seeded-tests.spec.js` |
-| 2048 | `apps/games/2048/tests.html` |
+| 2048 | `apps/games/2048/tests.html`, `apps/games/2048/seeded-tests.spec.js` |
 | Sliding Puzzle | `apps/games/Sliding Puzzle 3x3/tests.html`, `test_logic.js` |
 | Demo Recording | `demo-recording.spec.js` |
 
