@@ -2,7 +2,7 @@
 
 A web-based implementation of the "Bank" dice game, based on rules from [ThunderHive Games](https://www.thunderhivegames.com/).
 
-![Bank Game - Initial View](screenshots/bank_initial_view_1768072212804.png)
+![Bank Game - Initial View](screenshots/bank_initial_view.png)
 
 ## How to Play
 
@@ -55,7 +55,7 @@ After all rounds complete, the player with the highest score wins!
 - **Deterministic Testing**: Seed support for reproducible gameplay
 - **Sample Configurations**: Pre-built JSON files for quick setup
 
-![Bank Game - Settings with JSON Import/Export](screenshots/bank_settings_1768072298674.png)
+![Bank Game - Settings with JSON Import/Export](screenshots/bank_settings.png)
 
 ### Probability Dashboard
 - **Survival probability**: Shows (5/6)^rollNumber = odds of no 7 so far
@@ -69,7 +69,16 @@ Toggle to a compact view showing:
 - Points needed to tie leader
 - Rankings with tie handling
 
-![Bank Game - Summary Scoreboard](screenshots/bank_summary_scoreboard_1768072286970.png)
+![Bank Game - Summary Scoreboard](screenshots/bank_gameplay.png)
+
+### Game Over Modal
+
+When all rounds complete, a Game Over modal displays:
+- Winner announcement
+- Play Again button (fixed at top)
+- Scrollable final scoreboard (supports many players)
+
+![Bank Game - Game Over Modal](screenshots/bank_game_over.png)
 
 ## Default Configuration
 

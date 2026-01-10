@@ -480,7 +480,7 @@ header .subtitle {
 .probability-cheatsheet {
     position: fixed;
     bottom: 1rem;
-    right: 1rem;
+    left: 1rem;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -862,17 +862,23 @@ header .subtitle {
     text-align: center;
     max-width: 500px;
     width: 90%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
 }
 
 .modal-content h2 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
     color: var(--accent-gold);
+    flex-shrink: 0;
 }
 
 .winner-display {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
+    flex-shrink: 0;
 }
 
 .winner-name {
@@ -885,9 +891,19 @@ header .subtitle {
     color: var(--text-secondary);
 }
 
+/* Play Again button - positioned at top of action area */
+.modal-content .btn-new-game {
+    flex-shrink: 0;
+    margin-bottom: 1rem;
+}
+
 .final-scores {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     text-align: left;
+    max-height: 40vh;
+    overflow-y: auto;
+    flex-shrink: 1;
+    padding-right: 0.5rem;
 }
 
 .final-scores .player-final {
@@ -1203,9 +1219,8 @@ details.bank-action-group .btn-bank {
     }
 
     .probability-cheatsheet {
-        bottom: auto;
-        top: 1rem;
-        right: 1rem;
+        left: 1rem;
+        bottom: 1rem;
         max-width: 150px;
     }
 
