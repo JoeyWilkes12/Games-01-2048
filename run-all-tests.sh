@@ -138,6 +138,10 @@ if [ "$RUN_TESTS" = true ]; then
     # Random Event Dice UI tests
     run_test "Random Event Dice - UI Tests" \
         "npx playwright test apps/games/Random\\ Event\\ Dice/new-seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
+    
+    # Bank seeded tests
+    run_test "Bank - Seeded Tests" \
+        "npx playwright test apps/games/Bank/seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
 fi
 
 # Run Split Demo Tests (parallel)
