@@ -1,38 +1,23 @@
-# Game Hub - Test Commands Reference
+# Game Hub - Testing Documentation
 
-This document describes all available test commands for validating the Game Hub application.
+This document describes how to run all tests for the Game Hub application.
 
----
+## Prerequisites
 
-## Quick Start
+1. **Node.js** (v18+)
+2. **Install dependencies**: `npm install`
+3. **Install Playwright browsers**: `npx playwright install chromium`
 
-Run all tests at once:
-```bash
-./run-all-tests.sh
-```
+## Test Categories
 
----
-
-## Playwright Tests
-
-### Demo Recording (Video)
-Creates a full demonstration video of all playable games.
+### 1. Unit & Seeded Tests
+Fast, deterministic tests that verify game logic using seeded configurations.
 
 ```bash
-npx playwright test --project=demo
-```
+# Run all seeded tests
+./run-all-tests.sh --tests
 
-Output: Video recording saved to `./test-results/`
-
-### All Unit/Seeded Tests
-```bash
-npx playwright test --project=tests
-```
-
-### Random Event Dice - Seeded Tests
-Comprehensive tests using deterministic seeds for reproducibility.
-
-```bash
+# Run specific test file
 npx playwright test apps/games/Random\ Event\ Dice/seeded-tests.spec.js --project=tests
 ```
 
@@ -54,6 +39,49 @@ Tests include:
 - Analytics panel visibility
 - Settings panel toggle
 - Timer countdown
+
+### Bank - Seeded Tests
+Comprehensive tests for the Bank dice game mechanics.
+
+```bash
+npx playwright test apps/games/Bank/seeded-tests.spec.js --project=tests
+```
+
+Tests include:
+- Core game mechanics (rolling, UI state)
+- First-3-roll protection (7 = 70 pts)
+- Doubles behavior (face value vs doubled)
+- Banking functionality
+- Round progression
+- Game over logic
+- Settings and new game
+
+---
+
+### 2. Split Demo Tests (Parallel)
+Individual game demos that run in parallel for faster execution.
+
+```bash
+# Run parallel demos
+./run-all-tests.sh --split
+
+# With speed modifier (2x faster)
+./run-all-tests.sh --split --speed=2.0
+
+# With visible browser (headed mode)
+./run-all-tests.sh --split --headed
+```
+
+### 3. Full Demo Recording
+A complete sequential walkthrough of the entire application.
+
+```bash
+# Run full demo (slower, sequential)
+./run-all-tests.sh --demo
+
+# With speed modifier
+./run-all-tests.sh --demo --speed=2.0
+```
 
 ---
 
@@ -85,6 +113,27 @@ Tests include:
 
 ---
 
+## Command-Line Options
+
+| Option | Description |
+|--------|-------------|
+| `--tests` | Run unit/seeded tests only |
+| `--split` | Run split demo tests (parallel) |
+| `--demo` | Run full demo recording (sequential) |
+| `--all` | Run all tests (tests + split + demo) |
+| `--headed` | Run in visible browser mode |
+| `--speed=N` | Speed multiplier (e.g., `--speed=2.0` for 2x faster) |
+| `--report` | Open HTML report after tests |
+
+## Speed Control
+
+The `--speed` parameter controls how fast demos navigate:
+
+- `--speed=0.5` - Half speed (slower, better for debugging)
+- `--speed=1.0` - Normal speed (default)
+- `--speed=2.0` - Double speed (faster)
+- `--speed=4.0` - Quadruple speed (fastest, may miss visual details)
+
 ## View Test Report
 
 After running Playwright tests, view the HTML report:
@@ -101,20 +150,90 @@ This opens an interactive report in your browser showing:
 
 ---
 
-## Test Configuration Files
+## Examples
 
-Sample configuration files for seeded testing are located in:
-- `apps/games/Random Event Dice/sample configuration files/`
-- `apps/games/2048/sample configuration files/`
+```bash
+# Quick verification (default: tests + split)
+./run-all-tests.sh
 
-### Key Configuration Files
+# Full verification with visible browser
+./run-all-tests.sh --all --headed
 
-| File | Purpose |
-|------|---------|
-| `analytics-test-seed-12345.json` | Full analytics test with 15 players, seed 12345 |
-| `minimal-test-seed-42.json` | Minimal config with 3 players, seed 42 |
-| `test_specifications.json` | Comprehensive test specifications |
-| `test_specifications.xml` | XML format test specifications |
+# Fast parallel demos
+./run-all-tests.sh --split --speed=2.0
+
+# Debug a specific game demo
+DEMO_SPEED=0.5 npx playwright test tests/demo-red.spec.js --project=split-demos --headed
+```
+
+## Test File Structure
+
+```
+interstellar-zodiac/
+├── demo-recording.spec.js          # Full sequential demo
+├── tests/                          # Split parallel demos
+│   ├── demo-red.spec.js            # Random Event Dice demo
+│   ├── demo-2048.spec.js           # 2048 demo
+│   └── demo-sliding-puzzle.spec.js # Sliding Puzzle demo
+├── apps/games/
+│   ├── Random Event Dice/
+│   │   ├── seeded-tests.spec.js    # Core game logic tests
+│   │   └── new-seeded-tests.spec.js # UI enhancement tests
+│   └── Bank/
+│       └── seeded-tests.spec.js    # Bank game logic tests
+└── playwright.config.js            # Playwright configuration
+```
+
+## Test File Locations
+
+| Game | Test File(s) |
+|------|-------------|
+| Random Event Dice | `apps/games/Random Event Dice/seeded-tests.spec.js`, `playwright.test.js`, `new-seeded-tests.spec.js` |
+| Bank | `apps/games/Bank/seeded-tests.spec.js` |
+| 2048 | `apps/games/2048/tests.html` |
+| Sliding Puzzle | `apps/games/Sliding Puzzle 3x3/tests.html`, `test_logic.js` |
+| Demo Recording | `demo-recording.spec.js` |
+
+## Playwright Parallelism
+
+The `split-demos` project is configured for parallel execution:
+
+```javascript
+// playwright.config.js
+{
+  name: 'split-demos',
+  testDir: './tests',
+  fullyParallel: true,
+  workers: 3,  // Run 3 game demos simultaneously
+  // ...
+}
+```
+
+See [Playwright Parallelism Docs](https://playwright.dev/docs/test-parallel) for more details.
+
+## Troubleshooting
+
+### "No tests found" Error
+Ensure you're using the correct project name:
+```bash
+npx playwright test tests/ --project=split-demos
+```
+
+### Timeout Errors
+Reduce demo speed or increase timeout:
+```bash
+DEMO_SPEED=0.5 npx playwright test tests/demo-red.spec.js --project=split-demos
+```
+
+### "Too many arguments" Error
+Ensure `page.evaluate()` calls wrap arguments in an object:
+```javascript
+// ❌ Wrong
+await page.evaluate((y, selector) => { ... }, pos, container);
+
+// ✅ Correct
+await page.evaluate(({ y, selector }) => { ... }, { y: pos, selector: container });
+```
 
 ---
 
@@ -127,32 +246,3 @@ npx playwright test --project=tests --reporter=junit
 ```
 
 This outputs JUnit-compatible XML for CI systems like GitHub Actions.
-
----
-
-## Troubleshooting
-
-### Tests failing to find game elements?
-Ensure the local file server is accessible. Playwright uses `file://` protocol.
-
-### Video not recording?
-Check that you're using the `demo` project:
-```bash
-npx playwright test --project=demo
-```
-
-### Need verbose output?
-```bash
-npx playwright test --project=tests --debug
-```
-
----
-
-## Test File Locations
-
-| Game | Test File(s) |
-|------|-------------|
-| Random Event Dice | `apps/games/Random Event Dice/seeded-tests.spec.js`, `playwright.test.js` |
-| 2048 | `apps/games/2048/tests.html` |
-| Sliding Puzzle | `apps/games/Sliding Puzzle 3x3/tests.html`, `test_logic.js` |
-| Demo Recording | `demo-recording.spec.js` |

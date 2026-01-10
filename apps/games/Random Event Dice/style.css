@@ -1272,3 +1272,56 @@ header h1 {
         display: none;
     }
 }
+
+/* Timer Visibility Toggle */
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#toggle-timer-visibility {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--secondary-color);
+    padding: 0.25rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#toggle-timer-visibility:hover {
+    transform: scale(1.1);
+    color: var(--text-color);
+}
+
+.timer-display.hidden-text {
+    visibility: hidden; /* Use visibility to keep layout space if desired, or display: none to collapse */
+}
+
+/* Ensure the container keeps its size/shape even when text is hidden to avoid layout jumping */
+.timer-display {
+    min-width: 80px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+}
+
+.timer-display.hidden-text {
+    visibility: visible;
+    color: transparent;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Footer Styling */
+.app-footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    width: 100%;
+}

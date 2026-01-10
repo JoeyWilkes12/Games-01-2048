@@ -483,7 +483,10 @@ class DiceGame {
             panelWidthInput: document.getElementById('panel-width-input'),
             panelWidthDisplay: document.getElementById('panel-width-display'),
             playerList: document.getElementById('player-list'),
-            addPlayerBtn: document.getElementById('add-player-btn')
+            panelWidthDisplay: document.getElementById('panel-width-display'),
+            playerList: document.getElementById('player-list'),
+            addPlayerBtn: document.getElementById('add-player-btn'),
+            toggleTimerBtn: document.getElementById('toggle-timer-visibility')
         };
 
         // Initialize debug console
@@ -495,7 +498,20 @@ class DiceGame {
         // Link analytics graph update
         this.analytics.onTimelineUpdate = () => this.drawTimelineGraph();
 
+        this.initTimerToggle();
         this.init();
+    }
+
+    initTimerToggle() {
+        if (this.dom.toggleTimerBtn && this.dom.timerDisplay) {
+            this.dom.toggleTimerBtn.addEventListener('click', () => {
+                this.dom.timerDisplay.classList.toggle('hidden-text');
+
+                // Update icon rotation or state if desired
+                const isHidden = this.dom.timerDisplay.classList.contains('hidden-text');
+                this.dom.toggleTimerBtn.querySelector('svg').style.opacity = isHidden ? '0.5' : '1';
+            });
+        }
     }
 
     initDebugConsole() {

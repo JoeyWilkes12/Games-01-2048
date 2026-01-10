@@ -6,10 +6,13 @@
 # Usage: ./run-all-tests.sh [options]
 #
 # Options:
-#   --demo     Run only the demo recording
+#   --demo     Run only the full demo recording (sequential, long)
+#   --split    Run split demo tests (parallel capable, faster)
 #   --tests    Run only unit/seeded tests
-#   --all      Run everything (default)
+#   --all      Run everything (demo + split + tests)
 #   --report   Open the report after tests complete
+#   --headed   Run tests in headed mode (visible browser)
+#   --speed=N  Set demo speed multiplier (e.g. 2.0 for 2x faster, 0.5 for slower)
 #
 
 set -e
@@ -26,13 +29,19 @@ NC='\033[0m' # No Color
 
 # Parse arguments
 RUN_DEMO=false
+RUN_SPLIT=false
 RUN_TESTS=false
 OPEN_REPORT=false
+HEADED_FLAG=""
+DEMO_SPEED=""
 
 for arg in "$@"; do
     case $arg in
         --demo)
             RUN_DEMO=true
+            ;;
+        --split)
+            RUN_SPLIT=true
             ;;
         --tests)
             RUN_TESTS=true
@@ -40,25 +49,38 @@ for arg in "$@"; do
         --all)
             RUN_DEMO=true
             RUN_TESTS=true
+            RUN_SPLIT=true
             ;;
         --report)
             OPEN_REPORT=true
+            ;;
+        --headed)
+            HEADED_FLAG="--headed"
+            ;;
+        --speed=*)
+            DEMO_SPEED="${arg#*=}"
             ;;
         *)
             ;;
     esac
 done
 
-# Default to running all tests if no specific option given
-if [ "$RUN_DEMO" = false ] && [ "$RUN_TESTS" = false ]; then
-    RUN_DEMO=true
+# Default to running tests + split (faster) if no option given
+if [ "$RUN_DEMO" = false ] && [ "$RUN_TESTS" = false ] && [ "$RUN_SPLIT" = false ]; then
     RUN_TESTS=true
+    RUN_SPLIT=true
 fi
 
 echo ""
 echo -e "${BLUE}================================================${NC}"
 echo -e "${BLUE}   Game Hub - Automated Test Runner${NC}"
 echo -e "${BLUE}================================================${NC}"
+if [ -n "$DEMO_SPEED" ]; then
+    echo -e "Speed Multiplier: ${YELLOW}$DEMO_SPEED${NC}"
+fi
+if [ -n "$HEADED_FLAG" ]; then
+    echo -e "Mode: ${YELLOW}Headed (visible browser)${NC}"
+fi
 echo ""
 
 # Track results
@@ -71,17 +93,22 @@ run_test() {
     local name=$1
     local command=$2
     
-    ((TOTAL_TESTS++))
+    ((TOTAL_TESTS++)) || true
     echo -e "${YELLOW}▶ Running: ${name}${NC}"
     echo "  Command: $command"
     echo ""
     
-    if eval "$command"; then
+    set +e
+    eval "$command"
+    local result=$?
+    set -e
+    
+    if [ $result -eq 0 ]; then
         echo -e "${GREEN}✓ PASSED: ${name}${NC}"
-        ((TESTS_PASSED++))
+        ((TESTS_PASSED++)) || true
     else
         echo -e "${RED}✗ FAILED: ${name}${NC}"
-        ((TESTS_FAILED++))
+        ((TESTS_FAILED++)) || true
     fi
     echo ""
 }
@@ -93,6 +120,12 @@ if [ ! -d "node_modules" ]; then
     echo ""
 fi
 
+# Build environment string for speed
+SPEED_ENV=""
+if [ -n "$DEMO_SPEED" ]; then
+    SPEED_ENV="DEMO_SPEED=$DEMO_SPEED"
+fi
+
 # Run unit/seeded tests
 if [ "$RUN_TESTS" = true ]; then
     echo -e "${BLUE}--- Unit & Seeded Tests ---${NC}"
@@ -100,16 +133,33 @@ if [ "$RUN_TESTS" = true ]; then
     
     # Random Event Dice seeded tests
     run_test "Random Event Dice - Seeded Tests" \
-        "npx playwright test apps/games/Random\\ Event\\ Dice/seeded-tests.spec.js --project=tests --reporter=list"
+        "npx playwright test apps/games/Random\\ Event\\ Dice/seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
+    
+    # Random Event Dice UI tests
+    run_test "Random Event Dice - UI Tests" \
+        "npx playwright test apps/games/Random\\ Event\\ Dice/new-seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
+    
+    # Bank seeded tests
+    run_test "Bank - Seeded Tests" \
+        "npx playwright test apps/games/Bank/seeded-tests.spec.js --project=tests --reporter=list $HEADED_FLAG"
 fi
 
-# Run demo recording
-if [ "$RUN_DEMO" = true ]; then
-    echo -e "${BLUE}--- Demo Recording ---${NC}"
+# Run Split Demo Tests (parallel)
+if [ "$RUN_SPLIT" = true ]; then
+    echo -e "${BLUE}--- Split Demo Tests (Parallel) ---${NC}"
     echo ""
     
-    run_test "Demo Recording" \
-        "npx playwright test --project=demo --reporter=list"
+    run_test "Split Game Demos" \
+        "$SPEED_ENV npx playwright test tests/ --project=split-demos --reporter=list $HEADED_FLAG"
+fi
+
+# Run Full Demo Recording (sequential, long)
+if [ "$RUN_DEMO" = true ]; then
+    echo -e "${BLUE}--- Full Demo Recording ---${NC}"
+    echo ""
+    
+    run_test "Full Demo Recording" \
+        "$SPEED_ENV npx playwright test demo-recording.spec.js --project=demo --reporter=list $HEADED_FLAG"
 fi
 
 # Summary
@@ -127,8 +177,8 @@ else
 fi
 echo ""
 
-# Open report if requested or available
-if [ "$OPEN_REPORT" = true ] || [ "$TESTS_FAILED" -gt 0 ]; then
+# Open report if requested
+if [ "$OPEN_REPORT" = true ]; then
     echo -e "${YELLOW}Opening test report...${NC}"
     npx playwright show-report &
 fi
@@ -137,12 +187,8 @@ fi
 echo ""
 if [ "$TESTS_FAILED" -eq 0 ]; then
     echo -e "${GREEN}✓ All tests passed!${NC}"
-    echo ""
-    echo "View detailed report: npx playwright show-report"
     exit 0
 else
     echo -e "${RED}✗ Some tests failed. Review the report for details.${NC}"
-    echo ""
-    echo "View detailed report: npx playwright show-report"
     exit 1
 fi

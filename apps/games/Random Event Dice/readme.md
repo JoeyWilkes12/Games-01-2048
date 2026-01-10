@@ -1,6 +1,8 @@
-# Random Event Dice 2.0
+# Random Event Dice Generator
 
-A web-based dice rolling game with configurable event triggers, designed for random event generation in tabletop games or probabilistic simulations.
+**Version:** 2.0.0
+
+A highly configurable dice rolling application designed for group games, probability testing, and event simulation in tabletop games or probabilistic simulations.
 
 ## Features
 
@@ -26,7 +28,7 @@ A web-based dice rolling game with configurable event triggers, designed for ran
 - **Unlimited Players**: No maximum player limit (previously capped at 15)
 - **Side-by-Side Modal**: Player config and event logic panels displayed adjacently
 - **Split Save Button**: "Save & Export" (saves + downloads JSON + closes) and "Save" (closes only)
-- **Import Icon**: Upload icon (📥) for cleaner import button
+- **Import Icon**: Upload icon (📤) for cleaner import button
 - **Improved Heatmap Sizing**: Fixed sizing to fit within minimum 280px panel width
 - **Mobile Responsive Modal**: Panels stack vertically on tablets and phones
 

@@ -27,6 +27,7 @@ Welcome to my games repository! I explore logical aspects and algorithmic soluti
 - [Random Event Dice (v2.0)](apps/games/Random%20Event%20Dice)
 - [2048](apps/games/2048)
 - [Sliding Puzzle 3x3](apps/games/Sliding%20Puzzle%203x3)
+- [Bank](apps/games/Bank)
 
 ## Coming Soon / In Development
 - [Acquire](apps/games/Acquire)
@@ -66,26 +67,20 @@ See [tests.md](tests.md) for complete test documentation.
 
 ## Acknowledgements & AI Investment
 This project was developed with significant assistance from advanced AI tools, representing a financial investment in state-of-the-art technology to explore the future of coding.
-
-- **Financial Investment**: Google's AI Pro subscription (utilized even during trial periods to max capability).
-- **Tools**:
-    - **Antigravity**: An advanced agentic coding assistant by Google Deepmind.
-    - **Models Used**:
-        - **Gemini 3 Pro**: For primary reasoning, code generation, and complex task planning.
-        - **Claude Opus 4.5**: Utilized for specific reasoning tasks and alternative perspectives within the agentic workflow.
-
----
-
-## Game Descriptions
-
-### Random Event Dice
-A customizable dice rolling simulation designed for tabletop gaming or probability experiments. Features include event triggers, law of large numbers visualizations, and comprehensive analytics.
+Options:
+- `--demo`: Run full demo recording.
+- `--split`: Run split parallel demos.
+- `--headed`: Run in visible browser.
+- `--speed=2.0`: Run at 2x speed.
 
 ### 2048
 A single-player sliding block puzzle using numbered tiles. Features an Expectimax AI solver, multiple themes, and seeded randomness for reproducible runs.
 
 ### Sliding Puzzle 3x3
 A classic sliding tile puzzle where the player must rearrange scrambled tiles into a specific order.
+
+### Bank
+A multiplayer dice game based on rules from [ThunderHive Games](https://www.thunderhivegames.com/). Players take turns rolling dice to accumulate points in a shared "bank", then strategically decide when to claim those points. Rolling a 7 ends the round and loses unbanked points (except the first 3 rolls which are protected). Doubles double the bank!
 
 ### Acquire (Coming Soon)
 A strategic board game involving the placement of tiles to form and expand corporations. Players buy stock in active chains and earn bonuses when chains merge.
