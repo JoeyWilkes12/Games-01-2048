@@ -936,15 +936,11 @@ class BankGame {
             }
         }
 
-        // Hide undo settings when BYOD is enabled (irrelevant with physical dice)
+        // Hide undo mode settings when BYOD is enabled (resample/preserve is RNG-specific)
+        // Note: Undo BUTTON remains visible - user can still undo wrong dice sum selections
         const undoSettingGroup = document.getElementById('undo-setting-group');
         if (undoSettingGroup) {
             undoSettingGroup.style.display = enabled ? 'none' : 'block';
-        }
-
-        // Hide undo button when BYOD is enabled
-        if (this.dom.undoBtn) {
-            this.dom.undoBtn.style.display = enabled ? 'none' : 'inline-flex';
         }
     }
 

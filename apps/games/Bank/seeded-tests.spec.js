@@ -619,19 +619,19 @@ test.describe('Bank Game - BYOD Mode', () => {
         expect(rollBtnClasses2).not.toContain('byod-hidden');
     });
 
-    test('BYOD should hide undo settings when enabled', async ({ page }) => {
+    test('BYOD should hide undo mode dropdown but keep undo button visible', async ({ page }) => {
         // Enable BYOD
         await page.evaluate(() => {
             window.game.toggleBYOD(true);
         });
 
-        // Undo setting group should be hidden
+        // Undo mode setting group should be hidden (resample/preserve is RNG-specific)
         const undoDisplay = await page.locator('#undo-setting-group').evaluate(el => el.style.display);
         expect(undoDisplay).toBe('none');
 
-        // Undo button should be hidden
-        const undoBtnDisplay = await page.locator('#undo-btn').evaluate(el => el.style.display);
-        expect(undoBtnDisplay).toBe('none');
+        // Undo BUTTON should still be visible (user can undo wrong dice sum selections)
+        const undoBtnVisible = await page.locator('#undo-btn').isVisible();
+        expect(undoBtnVisible).toBe(true);
 
         // Disable BYOD
         await page.evaluate(() => {
@@ -748,5 +748,36 @@ test.describe('Bank Game - Undo Clears Output', () => {
         // Verify lastRollInfo is cleared
         const textAfter = await page.locator('#last-roll-info').textContent();
         expect(textAfter).toBe('');
+    });
+
+    test('undo should work in BYOD mode for correcting wrong dice selections', async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Make a BYOD roll with wrong sum (8)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(8, false);
+        });
+        await expect(page.locator('#bank-score')).toHaveText('8');
+
+        // Realize mistake - should have been 5. Undo.
+        await page.evaluate(() => {
+            window.game.undo();
+        });
+
+        // Bank should be back to 0
+        await expect(page.locator('#bank-score')).toHaveText('0');
+
+        // Now enter correct sum (5)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(5, false);
+        });
+        await expect(page.locator('#bank-score')).toHaveText('5');
     });
 });
