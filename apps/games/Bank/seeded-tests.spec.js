@@ -582,3 +582,171 @@ test.describe('Bank Game - Multi-Player Banking', () => {
         expect(result.player3Banked).toBe(true);
     });
 });
+
+// ==================== BYOD (Bring Your Own Dice) Tests ====================
+
+test.describe('Bank Game - BYOD Mode', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('should toggle BYOD mode and show/hide panel', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // BYOD panel should be visible
+        await expect(page.locator('#byod-panel')).not.toHaveClass(/hidden/);
+
+        // Roll button should be hidden
+        const rollBtnClasses = await page.locator('#roll-btn').getAttribute('class');
+        expect(rollBtnClasses).toContain('byod-hidden');
+
+        // Disable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(false);
+        });
+
+        // BYOD panel should be hidden
+        await expect(page.locator('#byod-panel')).toHaveClass(/hidden/);
+
+        // Roll button should be visible
+        const rollBtnClasses2 = await page.locator('#roll-btn').getAttribute('class');
+        expect(rollBtnClasses2).not.toContain('byod-hidden');
+    });
+
+    test('BYOD should hide undo settings when enabled', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Undo setting group should be hidden
+        const undoDisplay = await page.locator('#undo-setting-group').evaluate(el => el.style.display);
+        expect(undoDisplay).toBe('none');
+
+        // Undo button should be hidden
+        const undoBtnDisplay = await page.locator('#undo-btn').evaluate(el => el.style.display);
+        expect(undoBtnDisplay).toBe('none');
+
+        // Disable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(false);
+        });
+
+        // Undo setting should be visible again
+        const undoDisplay2 = await page.locator('#undo-setting-group').evaluate(el => el.style.display);
+        expect(undoDisplay2).toBe('block');
+    });
+
+    test('BYOD sum buttons should add correct points', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Click sum button for 8
+        await page.evaluate(() => {
+            window.game.handleBYODInput(8, false);
+        });
+
+        // Bank should be 8
+        await expect(page.locator('#bank-score')).toHaveText('8');
+
+        // Click sum button for 5
+        await page.evaluate(() => {
+            window.game.handleBYODInput(5, false);
+        });
+
+        // Bank should be 13 (8 + 5)
+        await expect(page.locator('#bank-score')).toHaveText('13');
+    });
+
+    test('BYOD protection: 7 should add 70 points in first 3 rolls', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Click 7 on first roll (protected)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(7, false);
+        });
+
+        // Bank should be 70 (protected 7)
+        await expect(page.locator('#bank-score')).toHaveText('70');
+    });
+
+    test('BYOD doubles should double bank after protection', async ({ page }) => {
+        // Enable BYOD and make 3 rolls to exit protection
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(5, false);  // Roll 1: +5
+            window.game.handleBYODInput(6, false);  // Roll 2: +6
+            window.game.handleBYODInput(4, false);  // Roll 3: +4 = 15 total
+        });
+
+        const bankBefore = await page.locator('#bank-score').textContent();
+        expect(parseInt(bankBefore)).toBe(15);
+
+        // Click doubles (roll 4 - should double)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(null, true);
+        });
+
+        // Bank should be doubled: 15 * 2 = 30
+        await expect(page.locator('#bank-score')).toHaveText('30');
+    });
+
+    test('BYOD 7 should bust after protection period', async ({ page }) => {
+        // Enable BYOD and make 3 rolls to exit protection
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(5, false);  // Roll 1
+            window.game.handleBYODInput(6, false);  // Roll 2
+            window.game.handleBYODInput(4, false);  // Roll 3 = 15 total
+        });
+
+        // Click 7 on roll 4 (should bust)
+        const result = await page.evaluate(() => {
+            window.game.handleBYODInput(7, false);
+            return {
+                bankScore: window.game.bankScore,
+                roundOver: window.game.roundOver
+            };
+        });
+
+        // Round should be over
+        expect(result.roundOver).toBe(true);
+    });
+});
+
+test.describe('Bank Game - Undo Clears Output', () => {
+
+    test('undo should clear last roll info text', async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+
+        // Make a roll to get some text in lastRollInfo
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        // Verify there's text in lastRollInfo
+        const textBefore = await page.locator('#last-roll-info').textContent();
+        expect(textBefore.length).toBeGreaterThan(0);
+
+        // Undo
+        await page.evaluate(() => {
+            window.game.undo();
+        });
+
+        // Verify lastRollInfo is cleared
+        const textAfter = await page.locator('#last-roll-info').textContent();
+        expect(textAfter).toBe('');
+    });
+});

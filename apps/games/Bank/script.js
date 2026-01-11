@@ -808,16 +808,19 @@ class BankGame {
 
         sorted.forEach((player, index) => {
             const isCurrent = this.players[this.currentPlayerIndex]?.id === player.id;
-            const rank = index === 0 && player.score > 0 ? '🥇' :
+            const medalRank = index === 0 && player.score > 0 ? '🥇' :
                 index === 1 && player.score > 0 ? '🥈' :
                     index === 2 && player.score > 0 ? '🥉' : '';
 
             const statusText = player.hasBankedThisRound ? '✓ Banked' :
                 isCurrent ? '🎲 Rolling' : 'Waiting';
 
-            // Gap column: difference from leader
-            const gap = index === 0 ? '-' : `+${leaderScore - player.score}`;
+            // Gap column: difference from leader (negative value for non-leaders)
+            const gap = index === 0 ? '-' : `-${leaderScore - player.score}`;
             const gapClass = index === 0 ? 'player-gap leader' : 'player-gap';
+
+            // Rank column: numerical position
+            const rankNumber = `#${index + 1}`;
 
             const classes = ['player-card'];
             if (isCurrent && !player.hasBankedThisRound) classes.push('current');
@@ -825,12 +828,13 @@ class BankGame {
 
             html += `
                 <div class="${classes.join(' ')}">
+                    <span class="player-score">${player.score}</span>
+                    <span class="${gapClass}">${gap}</span>
+                    <span class="player-rank">${rankNumber}</span>
                     <div class="player-info">
-                        <span class="player-name">${rank} ${player.name}</span>
+                        <span class="player-name">${medalRank} ${player.name}</span>
                         <span class="player-status">${statusText}</span>
                     </div>
-                    <span class="${gapClass}">${gap}</span>
-                    <span class="player-score">${player.score}</span>
                 </div>
             `;
         });
@@ -930,6 +934,17 @@ class BankGame {
             } else {
                 this.dom.rollBtn.classList.remove('byod-hidden');
             }
+        }
+
+        // Hide undo settings when BYOD is enabled (irrelevant with physical dice)
+        const undoSettingGroup = document.getElementById('undo-setting-group');
+        if (undoSettingGroup) {
+            undoSettingGroup.style.display = enabled ? 'none' : 'block';
+        }
+
+        // Hide undo button when BYOD is enabled
+        if (this.dom.undoBtn) {
+            this.dom.undoBtn.style.display = enabled ? 'none' : 'inline-flex';
         }
     }
 
@@ -1110,6 +1125,12 @@ class BankGame {
             this.rng.current = previousState.rngState;
         }
         // In 'resample' mode, RNG continues from current position (new random)
+
+        // Clear roll info text to avoid confusion
+        if (this.dom.lastRollInfo) {
+            this.dom.lastRollInfo.textContent = '';
+            this.dom.lastRollInfo.className = 'last-roll-info';
+        }
 
         this.hideAlert();
         this.renderPlayers();

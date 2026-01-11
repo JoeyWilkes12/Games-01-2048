@@ -41,14 +41,16 @@ After all rounds complete, the player with the highest score wins!
 - **Multi-Select Banking**: After roll 3, select multiple players and bank them all at once
 - **Undo**: Undo last action with Ctrl+Z (supports re-sample or preserve modes)
 - **Keyboard Shortcuts**: SPACE to roll, B to bank, Ctrl+Z to undo
+- **Bring Your Own Dice (BYOD)**: Enable physical dice mode - enter sums manually via buttons 2-12 and doubles
 
 ### UI & Visual
 - **Collapsible Stats Dashboard**: Probability info in a collapsible panel
 - **Collapsible Bank Panel**: Player selection in an expandable dropdown
-- **Summary Scoreboard**: Toggle between full and summary views with gap calculations
+- **Full Scoreboard**: Shows Score, Gap from leader, and Rank columns (#1, #2, etc.)
+- **Compact Scoreboard**: Toggle between full and summary views
 - **Visual Feedback**: Dice animations, score pulses, status indicators
-- **Gap Column**: Scoreboard shows "+X to tie" for each player vs leader
 - **Mobile Responsive**: Touch-friendly targets, responsive layouts
+- **Home Button Confirmation**: Warns before leaving during active game
 
 ### Configuration
 - **JSON Import/Export**: Save and load game configurations
@@ -113,7 +115,7 @@ When all rounds complete, a Game Over modal displays:
 | `index.html` | Game UI and structure |
 | `style.css` | Visual styling (dark theme) |
 | `script.js` | BankGame class and logic |
-| `seeded-tests.spec.js` | Playwright test suite (28 tests) |
+| `seeded-tests.spec.js` | Playwright test suite (36 tests) |
 | `enhancements.md` | Proposed future enhancements |
 | `sample configuration files/` | Pre-built JSON configs |
 
@@ -124,7 +126,7 @@ Run the seeded tests with:
 ./node_modules/.bin/playwright test apps/games/Bank/seeded-tests.spec.js --project=tests
 ```
 
-All 28 tests cover:
+All 36 tests cover:
 - Core game mechanics
 - Dice rolling behavior
 - First 3 roll protection
@@ -133,6 +135,8 @@ All 28 tests cover:
 - Round progression
 - Game completion
 - Multi-player banking
+- BYOD mode toggle and sum buttons
+- Undo clears output text
 - Settings
 
 ## Strategy Tips
