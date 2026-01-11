@@ -115,7 +115,7 @@ When all rounds complete, a Game Over modal displays:
 | `index.html` | Game UI and structure |
 | `style.css` | Visual styling (dark theme) |
 | `script.js` | BankGame class and logic |
-| `seeded-tests.spec.js` | Playwright test suite (37 tests) |
+| `seeded-tests.spec.js` | Playwright test suite (41 tests) |
 | `enhancements.md` | Proposed future enhancements |
 | `sample configuration files/` | Pre-built JSON configs |
 

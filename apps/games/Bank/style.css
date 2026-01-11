@@ -1016,7 +1016,18 @@ header .subtitle {
 /* Play Again button - positioned at top of action area */
 .modal-content .btn-new-game {
     flex-shrink: 0;
+}
+
+/* Game Over action buttons container */
+.game-over-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
     margin-bottom: 1rem;
+}
+
+.game-over-actions .btn {
+    flex-shrink: 0;
 }
 
 .final-scores {

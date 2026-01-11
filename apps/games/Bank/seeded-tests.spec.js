@@ -781,3 +781,92 @@ test.describe('Bank Game - Undo Clears Output', () => {
         await expect(page.locator('#bank-score')).toHaveText('5');
     });
 });
+
+// ==================== Undo from Game Over Tests ====================
+
+test.describe('Bank Game - Undo from Game Over', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('undo button should appear in game over modal', async ({ page }) => {
+        // Make a roll to create undo history, then end game
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over modal has undo button
+        await expect(page.locator('#game-over-modal')).not.toHaveClass(/hidden/);
+        await expect(page.locator('#undo-from-gameover-btn')).toBeVisible();
+    });
+
+    test('undo from game over should restore game state (non-BYOD)', async ({ page }) => {
+        // Make a roll to create undo history
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        // Force end game
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over
+        const gameOverBefore = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverBefore).toBe(true);
+
+        // Click undo from game over modal
+        await page.click('#undo-from-gameover-btn');
+
+        // Verify modal hidden and game resumed
+        await expect(page.locator('#game-over-modal')).toHaveClass(/hidden/);
+        const gameOverAfter = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverAfter).toBe(false);
+    });
+
+    test('undo from game over should work in BYOD mode', async ({ page }) => {
+        // Enable BYOD and make moves
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(8, false);
+            window.game.handleBYODInput(5, false);
+        });
+
+        // Force end game
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over
+        const gameOverBefore = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverBefore).toBe(true);
+
+        // Click undo from game over modal
+        await page.click('#undo-from-gameover-btn');
+
+        // Verify modal hidden and game resumed
+        await expect(page.locator('#game-over-modal')).toHaveClass(/hidden/);
+        const gameOverAfter = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverAfter).toBe(false);
+
+        // Bank should be restored to previous state (before last BYOD input)
+        const bank = await page.locator('#bank-score').textContent();
+        expect(parseInt(bank)).toBe(8); // Before the +5
+    });
+
+    test('undo button should be disabled when no undo history', async ({ page }) => {
+        // End game without any rolls
+        await page.evaluate(() => {
+            window.game.undoStack = []; // Clear any existing history
+            window.game.endGame();
+        });
+
+        // Undo button should be disabled
+        await expect(page.locator('#undo-from-gameover-btn')).toBeDisabled();
+    });
+});

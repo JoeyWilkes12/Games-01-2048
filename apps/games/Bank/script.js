@@ -135,6 +135,7 @@ class BankGame {
             winnerDisplay: document.getElementById('winner-display'),
             finalScores: document.getElementById('final-scores'),
             playAgainBtn: document.getElementById('play-again-btn'),
+            gameOverUndoBtn: document.getElementById('undo-from-gameover-btn'),
             survivalProb: document.getElementById('survival-prob'),
             probabilityCheatsheet: document.getElementById('probability-cheatsheet'),
             // New elements for compact scoreboard
@@ -178,6 +179,11 @@ class BankGame {
         // Undo button
         if (this.dom.undoBtn) {
             this.dom.undoBtn.addEventListener('click', () => this.undo());
+        }
+
+        // Game over undo button
+        if (this.dom.gameOverUndoBtn) {
+            this.dom.gameOverUndoBtn.addEventListener('click', () => this.undoFromGameOver());
         }
 
         // Bank button - banks all selected players
@@ -1155,12 +1161,30 @@ class BankGame {
     }
 
     /**
-     * Update undo button enabled state
+     * Update undo button enabled state (syncs both main and game over buttons)
      */
     updateUndoButton() {
+        const hasUndo = this.undoStack.length > 0;
         if (this.dom.undoBtn) {
-            this.dom.undoBtn.disabled = this.undoStack.length === 0;
+            this.dom.undoBtn.disabled = !hasUndo;
         }
+        // Also sync game over undo button
+        if (this.dom.gameOverUndoBtn) {
+            this.dom.gameOverUndoBtn.disabled = !hasUndo;
+        }
+    }
+
+    /**
+     * Undo from game over modal - hides modal and restores previous state
+     */
+    undoFromGameOver() {
+        if (this.undoStack.length === 0) return;
+
+        // Hide game over modal
+        this.dom.gameOverModal.classList.add('hidden');
+
+        // Perform undo (restores state including gameOver = false)
+        this.undo();
     }
 
     /**
