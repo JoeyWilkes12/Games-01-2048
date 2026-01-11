@@ -582,3 +582,291 @@ test.describe('Bank Game - Multi-Player Banking', () => {
         expect(result.player3Banked).toBe(true);
     });
 });
+
+// ==================== BYOD (Bring Your Own Dice) Tests ====================
+
+test.describe('Bank Game - BYOD Mode', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('should toggle BYOD mode and show/hide panel', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // BYOD panel should be visible
+        await expect(page.locator('#byod-panel')).not.toHaveClass(/hidden/);
+
+        // Roll button should be hidden
+        const rollBtnClasses = await page.locator('#roll-btn').getAttribute('class');
+        expect(rollBtnClasses).toContain('byod-hidden');
+
+        // Disable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(false);
+        });
+
+        // BYOD panel should be hidden
+        await expect(page.locator('#byod-panel')).toHaveClass(/hidden/);
+
+        // Roll button should be visible
+        const rollBtnClasses2 = await page.locator('#roll-btn').getAttribute('class');
+        expect(rollBtnClasses2).not.toContain('byod-hidden');
+    });
+
+    test('BYOD should hide undo mode dropdown but keep undo button visible', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Undo mode setting group should be hidden (resample/preserve is RNG-specific)
+        const undoDisplay = await page.locator('#undo-setting-group').evaluate(el => el.style.display);
+        expect(undoDisplay).toBe('none');
+
+        // Undo BUTTON should still be visible (user can undo wrong dice sum selections)
+        const undoBtnVisible = await page.locator('#undo-btn').isVisible();
+        expect(undoBtnVisible).toBe(true);
+
+        // Disable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(false);
+        });
+
+        // Undo setting should be visible again
+        const undoDisplay2 = await page.locator('#undo-setting-group').evaluate(el => el.style.display);
+        expect(undoDisplay2).toBe('block');
+    });
+
+    test('BYOD sum buttons should add correct points', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Click sum button for 8
+        await page.evaluate(() => {
+            window.game.handleBYODInput(8, false);
+        });
+
+        // Bank should be 8
+        await expect(page.locator('#bank-score')).toHaveText('8');
+
+        // Click sum button for 5
+        await page.evaluate(() => {
+            window.game.handleBYODInput(5, false);
+        });
+
+        // Bank should be 13 (8 + 5)
+        await expect(page.locator('#bank-score')).toHaveText('13');
+    });
+
+    test('BYOD protection: 7 should add 70 points in first 3 rolls', async ({ page }) => {
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Click 7 on first roll (protected)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(7, false);
+        });
+
+        // Bank should be 70 (protected 7)
+        await expect(page.locator('#bank-score')).toHaveText('70');
+    });
+
+    test('BYOD doubles should double bank after protection', async ({ page }) => {
+        // Enable BYOD and make 3 rolls to exit protection
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(5, false);  // Roll 1: +5
+            window.game.handleBYODInput(6, false);  // Roll 2: +6
+            window.game.handleBYODInput(4, false);  // Roll 3: +4 = 15 total
+        });
+
+        const bankBefore = await page.locator('#bank-score').textContent();
+        expect(parseInt(bankBefore)).toBe(15);
+
+        // Click doubles (roll 4 - should double)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(null, true);
+        });
+
+        // Bank should be doubled: 15 * 2 = 30
+        await expect(page.locator('#bank-score')).toHaveText('30');
+    });
+
+    test('BYOD 7 should bust after protection period', async ({ page }) => {
+        // Enable BYOD and make 3 rolls to exit protection
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(5, false);  // Roll 1
+            window.game.handleBYODInput(6, false);  // Roll 2
+            window.game.handleBYODInput(4, false);  // Roll 3 = 15 total
+        });
+
+        // Click 7 on roll 4 (should bust)
+        const result = await page.evaluate(() => {
+            window.game.handleBYODInput(7, false);
+            return {
+                bankScore: window.game.bankScore,
+                roundOver: window.game.roundOver
+            };
+        });
+
+        // Round should be over
+        expect(result.roundOver).toBe(true);
+    });
+});
+
+test.describe('Bank Game - Undo Clears Output', () => {
+
+    test('undo should clear last roll info text', async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+
+        // Make a roll to get some text in lastRollInfo
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        // Verify there's text in lastRollInfo
+        const textBefore = await page.locator('#last-roll-info').textContent();
+        expect(textBefore.length).toBeGreaterThan(0);
+
+        // Undo
+        await page.evaluate(() => {
+            window.game.undo();
+        });
+
+        // Verify lastRollInfo is cleared
+        const textAfter = await page.locator('#last-roll-info').textContent();
+        expect(textAfter).toBe('');
+    });
+
+    test('undo should work in BYOD mode for correcting wrong dice selections', async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+
+        // Enable BYOD
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+        });
+
+        // Make a BYOD roll with wrong sum (8)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(8, false);
+        });
+        await expect(page.locator('#bank-score')).toHaveText('8');
+
+        // Realize mistake - should have been 5. Undo.
+        await page.evaluate(() => {
+            window.game.undo();
+        });
+
+        // Bank should be back to 0
+        await expect(page.locator('#bank-score')).toHaveText('0');
+
+        // Now enter correct sum (5)
+        await page.evaluate(() => {
+            window.game.handleBYODInput(5, false);
+        });
+        await expect(page.locator('#bank-score')).toHaveText('5');
+    });
+});
+
+// ==================== Undo from Game Over Tests ====================
+
+test.describe('Bank Game - Undo from Game Over', () => {
+
+    test.beforeEach(async ({ page }) => {
+        await page.goto(BANK_GAME_URL);
+        await page.waitForLoadState('domcontentloaded');
+        await waitForGame(page);
+    });
+
+    test('undo button should appear in game over modal', async ({ page }) => {
+        // Make a roll to create undo history, then end game
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over modal has undo button
+        await expect(page.locator('#game-over-modal')).not.toHaveClass(/hidden/);
+        await expect(page.locator('#undo-from-gameover-btn')).toBeVisible();
+    });
+
+    test('undo from game over should restore game state (non-BYOD)', async ({ page }) => {
+        // Make a roll to create undo history
+        await page.click('#roll-btn');
+        await page.waitForTimeout(600);
+
+        // Force end game
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over
+        const gameOverBefore = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverBefore).toBe(true);
+
+        // Click undo from game over modal
+        await page.click('#undo-from-gameover-btn');
+
+        // Verify modal hidden and game resumed
+        await expect(page.locator('#game-over-modal')).toHaveClass(/hidden/);
+        const gameOverAfter = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverAfter).toBe(false);
+    });
+
+    test('undo from game over should work in BYOD mode', async ({ page }) => {
+        // Enable BYOD and make moves
+        await page.evaluate(() => {
+            window.game.toggleBYOD(true);
+            window.game.handleBYODInput(8, false);
+            window.game.handleBYODInput(5, false);
+        });
+
+        // Force end game
+        await page.evaluate(() => {
+            window.game.endGame();
+        });
+
+        // Verify game over
+        const gameOverBefore = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverBefore).toBe(true);
+
+        // Click undo from game over modal
+        await page.click('#undo-from-gameover-btn');
+
+        // Verify modal hidden and game resumed
+        await expect(page.locator('#game-over-modal')).toHaveClass(/hidden/);
+        const gameOverAfter = await page.evaluate(() => window.game.gameOver);
+        expect(gameOverAfter).toBe(false);
+
+        // Bank should be restored to previous state (before last BYOD input)
+        const bank = await page.locator('#bank-score').textContent();
+        expect(parseInt(bank)).toBe(8); // Before the +5
+    });
+
+    test('undo button should be disabled when no undo history', async ({ page }) => {
+        // End game without any rolls
+        await page.evaluate(() => {
+            window.game.undoStack = []; // Clear any existing history
+            window.game.endGame();
+        });
+
+        // Undo button should be disabled
+        await expect(page.locator('#undo-from-gameover-btn')).toBeDisabled();
+    });
+});
